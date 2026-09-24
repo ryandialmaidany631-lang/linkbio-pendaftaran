@@ -27,12 +27,12 @@
         .container {
             width: 100%;
             max-width: 480px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
             margin: auto;
             padding: 40px 25px;
             border-radius: 28px;
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
             text-align: center;
         }
         
@@ -56,13 +56,13 @@
             transform: scale(1.05);
         }
 
-        /* Judul & Tagline: Pemisahan Baris Otomatis */
+        /* Judul & Tagline */
         #display-judul {
-            font-size: 21px;
+            font-size: 20px;
             font-weight: 800;
             margin-bottom: 8px;
             color: #0f172a;
-            line-height: 1.35;
+            line-height: 1.4;
             letter-spacing: -0.02em;
         }
         #display-tagline {
@@ -202,24 +202,7 @@
         </div>
     </div>
 
-    <!-- Script Utama (Tidak Berubah & Aman) -->
-    <script type="module" src="app.js?v=304"></script>
-
-    <script>
-        // Script kecil untuk otomatis memecah Judul menjadi 2 baris sesuai permintaan Anda
-        // Baris 1: TKQ Luqmanul Hakim | Baris 2: Ponpes Luqmanul Hakim Medan
-        const observer = new MutationObserver(() => {
-            const judulEl = document.getElementById("display-judul");
-            if (judulEl && judulEl.innerText && !judulEl.innerText.includes("<br>") && judulEl.innerText !== "Memuat...") {
-                let text = judulEl.innerText.toUpperCase();
-                // Jika teks mengandung kata kunci, rapikan format barisnya
-                if (text.includes("PONPES")) {
-                    text = text.replace("PONPES", "<br><span style='font-size: 17px; font-weight: 700; color: #2563eb;'>PONPES</span>");
-                    judulEl.innerHTML = text;
-                }
-            }
-        });
-        observer.observe(document.getElementById("display-judul"), { childList: true, characterData: true, subtree: true });
-    </script>
+    <!-- Script Utama (100% Aman & Sinkron) -->
+    <script type="module" src="app.js?v=305"></script>
 </body>
 </html>
