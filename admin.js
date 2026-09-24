@@ -18,7 +18,6 @@ const SUPABASE_URL = 'https://wnstuvnvrfiqmohtkfme.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Induc3R1dm52cmZpcW1vaHRrZm1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyMTE1MzksImV4cCI6MjEwNTc4NzUzOX0.AY-gLTVCQVqu3skr0feamHZRt7-Lob8ls3Ab7SDTVxM'; 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Fungsi untuk memuat data ke form admin
 async function muatDataAdmin() {
     try {
         const docSnap = await getDoc(doc(db, "situs", "pengaturan"));
@@ -38,10 +37,8 @@ async function muatDataAdmin() {
     }
 }
 
-// Muat data saat halaman pertama kali dibuka
 window.addEventListener("DOMContentLoaded", muatDataAdmin);
 
-// Proses Simpan & Upload Data
 document.getElementById("form-admin").addEventListener("submit", async (e) => {
     e.preventDefault();
     
@@ -66,7 +63,6 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             updatedData[`waNumber${i}`] = document.getElementById(`wa-number-${i}`)?.value || "";
         }
 
-        // Upload Brosur per Tingkatan ke Supabase Storage
         const levels = ["tkq", "ula", "wustho", "ulya"];
         for (const lvl of levels) {
             const fileInput = document.getElementById(`input-brosur-${lvl}`);
@@ -94,22 +90,18 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             }
         }
 
-        // Simpan data ke Firestore
-        await setDoc(docRef, updatedData);
+        await setDoc(docRef, updatedData, { merge: true });
         
         saveBtn.innerText = "SIMPAN PERUBAHAN";
         saveBtn.disabled = false;
 
-        // Kosongkan pilihan file input brosur agar tidak terupload ulang dua kali jika diklik simpan lagi
         for (const lvl of levels) {
             const fileInput = document.getElementById(`input-brosur-${lvl}`);
             if (fileInput) fileInput.value = "";
         }
 
-        // Muat ulang data terbaru tanpa merefresh halaman agar data tetap ada di form
         await muatDataAdmin();
-
-        alert("Berhasil! Semua data dan brosur telah tersimpan dan diperbarui.");
+        alert("Berhasil! Semua data dan brosur telah tersimpan.");
 
     } catch (err) {
         console.error("TERJADI ERROR DETAIL:", err);
