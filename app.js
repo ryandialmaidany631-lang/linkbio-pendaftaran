@@ -1,75 +1,89 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const title = localStorage.getItem("schoolTitle");
-    if (title) document.getElementById("display-judul").innerText = title;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    const tagline = localStorage.getItem("schoolTagline");
-    if (tagline) document.getElementById("display-tagline").innerText = tagline;
+const firebaseConfig = {
+  apiKey: "AIzaSyAX9MlyLRIz7zcFUtKtnqcc4vNSOzerYMQ",
+  authDomain: "linkbio-sekolah.firebaseapp.com",
+  projectId: "linkbio-sekolah",
+  storageBucket: "linkbio-sekolah.firebasestorage.app",
+  messagingSenderId: "149105804714",
+  appId: "1:149105804714:web:bea6f30b0af1a3c32fd7d3"
+};
 
-    const logo = localStorage.getItem("schoolLogo");
-    if (logo) {
-        const logoImg = document.getElementById("display-logo");
-        logoImg.src = logo;
-        logoImg.style.display = "block";
-    }
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    const pendaftaranLink = localStorage.getItem("pendaftaranLink");
-    const pendaftaranBtn = document.getElementById("link-pendaftaran");
-    if (pendaftaranLink) {
-        pendaftaranBtn.href = pendaftaranLink;
-    } else {
-        pendaftaranBtn.href = "#";
-        pendaftaranBtn.onclick = (e) => { e.preventDefault(); alert("Link pendaftaran belum diatur oleh admin."); };
-    }
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const docRef = doc(db, "situs", "pengaturan");
+        const docSnap = await getDoc(docRef);
 
-    const waContainer = document.getElementById("whatsapp-container");
-    waContainer.innerHTML = "";
+        if (docSnap.exists()) {
+            const data = docSnap.data();
 
-    for (let i = 1; i <= 3; i++) {
-        const name = localStorage.getItem(`waName${i}`);
-        const number = localStorage.getItem(`waNumber${i}`);
+            // Judul & Tagline
+            if (data.judul) document.getElementById("display-judul").innerText = data.judul;
+            if (data.tagline) document.getElementById("display-tagline").innerText = data.tagline;
 
-        if (number) {
-            const cleanNumber = number.replace(/\D/g, '');
-            const defaultText = encodeURIComponent("Halo, saya ingin bertanya mengenai informasi pendaftaran.");
+            // Logo
+            if (data.logoUrl) {
+                const logoImg = document.getElementById("display-logo");
+                logoImg.src = data.logoUrl;
+                document.getElementById("logo-box").style.display = "block";
+            }
+
+            // Link Pendaftaran
+            const btnPendaftaran = document.getElementById("link-pendaftaran");
+            if (data.pendaftaranLink) {
+                btnPendaftaran.href = data.pendaftaranLink;
+                btnPendaftaran.style.display = "block";
+            }
+
+            // Tombol WhatsApp (1 sampai 3)
+            const waContainer = document.getElementById("whatsapp-container");
+            waContainer.innerHTML = "";
+            for (let i = 1; i <= 3; i++) {
+                if (data[`waName${i}`] && data[`waNumber${i}`]) {
+                    const cleanNum = data[`waNumber${i}`].replace(/\D/g, '');
+                    const a = document.createElement("a");
+                    a.href = `https://wa.me/${cleanNum}?text=${encodeURIComponent("Halo, saya ingin bertanya mengenai informasi pendaftaran.")}`;
+                    a.className = "btn btn-whatsapp";
+                    a.target = "_blank";
+                    a.innerText = `WhatsApp: ${data[`waName${i}`]}`;
+                    waContainer.appendChild(a);
+                }
+            }
+
+            // Brosur 4 Tingkatan (TKQ, ULA, WUSTHO, ULYA)
+            const brochureContainer = document.getElementById("brochure-container");
+            brochureContainer.innerHTML = "";
             
-            const btn = document.createElement("a");
-            btn.href = `https://wa.me/${cleanNumber}?text=${defaultText}`;
-            btn.className = "btn btn-whatsapp";
-            btn.target = "_blank";
-            btn.innerText = `WhatsApp: ${name || 'Admin ' + i}`;
-            
-            waContainer.appendChild(btn);
+            const levels = [
+                { key: "tkq", label: "Brosur TKQ" },
+                { key: "ula", label: "Brosur ULA (SD)" },
+                { key: "wustho", label: "Brosur WUSTHO (SMP)" },
+                { key: "ulya", label: "Brosur ULYA (SMA)" }
+            ];
+
+            levels.forEach(lvl => {
+                const fileUrl = data[`brochure_${lvl.key}`];
+                const a = document.createElement("a");
+                a.className = "btn btn-brochure";
+                
+                if (fileUrl) {
+                    a.href = fileUrl;
+                    a.target = "_blank";
+                    a.innerText = `📥 Download ${lvl.label}`;
+                } else {
+                    a.href = "#";
+                    a.className += " btn-disabled";
+                    a.innerText = `📥 ${lvl.label} (Belum Tersedia)`;
+                    a.onclick = (e) => { e.preventDefault(); alert(`Brosur ${lvl.label} belum di-upload.`); };
+                }
+                brochureContainer.appendChild(a);
+            });
         }
+    } catch (err) {
+        console.error("Gagal memuat data dari Firebase:", err);
     }
-
-    const brochureContainer = document.getElementById("brochure-container");
-    brochureContainer.innerHTML = "";
-
-    const levels = [
-        { key: "tkq", label: "Brosur TKQ" },
-        { key: "ula", label: "Brosur ULA (SD)" },
-        { key: "wustho", label: "Brosur WUSTHO (SMP)" },
-        { key: "ulya", label: "Brosur ULYA (SMA)" }
-    ];
-
-    levels.forEach(lvl => {
-        const fileData = localStorage.getItem(`brochure_${lvl.key}`);
-        const fileName = localStorage.getItem(`brochureName_${lvl.key}`) || `${lvl.label}.pdf`;
-
-        const btn = document.createElement("a");
-        btn.className = "btn btn-brochure";
-        
-        if (fileData) {
-            btn.href = fileData;
-            btn.download = fileName;
-            btn.innerText = `📥 Download ${lvl.label}`;
-        } else {
-            btn.href = "#";
-            btn.className += " btn-disabled";
-            btn.innerText = `📥 ${lvl.label} (Belum Tersedia)`;
-            btn.onclick = (e) => { e.preventDefault(); alert(`Brosur ${lvl.label} belum di-upload oleh admin.`); };
-        }
-
-        brochureContainer.appendChild(btn);
-    });
 });
