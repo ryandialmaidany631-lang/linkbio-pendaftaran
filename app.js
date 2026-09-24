@@ -14,41 +14,72 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 window.addEventListener("DOMContentLoaded", async () => {
-    // 1. Paksa sembunyikan semua elemen yang memiliki kata "loading" atau "memuat"
-    document.querySelectorAll("[id*='load'], [class*='load']").forEach(el => {
-        el.style.display = "none";
-    });
-    
-    // 2. Paksa tampilkan kontainer utama
-    document.querySelectorAll("[id*='content'], [id*='main'], [class*='content']").forEach(el => {
-        el.style.display = "block";
-    });
-
     try {
         const docSnap = await getDoc(doc(db, "situs", "pengaturan"));
+        
         if (docSnap.exists()) {
             const data = docSnap.data();
             
-            // Masukkan data teks jika elemennya ada
-            if (document.getElementById("judul-situs")) document.getElementById("judul-situs").innerText = data.judul || "Pendaftaran Sekolah";
-            if (document.getElementById("tagline-situs")) document.getElementById("tagline-situs").innerText = data.tagline || "";
+            // Ubah teks "Memuat..." pada ID display-judul menjadi data asli dari Firestore
+            const judulEl = document.getElementById("display-judul");
+            if (judulEl) {
+                judulEl.innerText = data.judul || "Pendaftaran Sekolah";
+            }
             
-            const btnPendaftaran = document.getElementById("btn-pendaftaran-utama");
-            if (btnPendaftaran && data.pendaftaranLink) {
-                btnPendaftaran.href = data.pendaftaranLink;
+            const taglineEl = document.getElementById("display-tagline");
+            if (taglineEl && data.tagline) {
+                taglineEl.innerText = data.tagline;
+            }
+            
+            // Tampilkan tombol website pendaftaran jika ada linknya
+            const linkPendaftaran = document.getElementById("link-pendaftaran");
+            if (linkPendaftaran && data.pendaftaranLink) {
+                linkPendaftaran.href = data.pendaftaranLink;
+                linkPendaftaran.style.display = "block";
             }
 
-            // Atur link tombol download brosur per tingkatan
-            const levels = ["tkq", "ula", "wustho", "ulya"];
-            levels.forEach(lvl => {
-                const btnBrosur = document.getElementById(`btn-brosur-${lvl}`);
-                if (btnBrosur && data[`brochure_${lvl}`]) {
-                    btnBrosur.href = data[`brochure_${lvl}`];
-                    btnBrosur.style.display = "inline-block";
+            // Tampilkan tombol WhatsApp jika ada
+            const waContainer = document.getElementById("whatsapp-container");
+            if (waContainer) {
+                let waHtml = "";
+                for (let i = 1; i <= 3; i++) {
+                    const name = data[`waName${i}`];
+                    const num = data[`waNumber${i}`];
+                    if (name && num) {
+                        waHtml += `<a href="https://wa.me/${num}" target="_blank" class="btn btn-whatsapp" style="display:block; margin-bottom:10px;">${name}</a>`;
+                    }
                 }
-            });
+                waContainer.innerHTML = waHtml;
+            }
+
+            // Tampilkan brosur per tingkatan jika ada
+            const brochureContainer = document.getElementById("brochure-container");
+            if (brochureContainer) {
+                const levels = [
+                    { key: "tkq", label: "Brosur TKQ" },
+                    { key: "ula", label: "Brosur ULA (SD)" },
+                    { key: "wustho", label: "Brosur WUSTHO (SMP)" },
+                    { key: "ulya", label: "Brosur ULYA (SMA)" }
+                ];
+                
+                let brochureHtml = "";
+                levels.forEach(lvl => {
+                    const url = data[`brochure_${lvl.key}`];
+                    if (url) {
+                        brochureHtml += `<a href="${url}" target="_blank" class="btn btn-brochure" style="display:block; margin-bottom:10px;">${lvl.label}</a>`;
+                    }
+                });
+                brochureContainer.innerHTML = brochureHtml;
+            }
+
+        } else {
+            // Jika data kosong di database, ubah tulisan memuat agar tidak membingungkan
+            const judulEl = document.getElementById("display-judul");
+            if (judulEl) judulEl.innerText = "Pendaftaran Sekolah";
         }
     } catch (err) {
         console.error("Gagal memuat data publik:", err);
+        const judulEl = document.getElementById("display-judul");
+        if (judulEl) judulEl.innerText = "Pendaftaran Sekolah";
     }
 });
