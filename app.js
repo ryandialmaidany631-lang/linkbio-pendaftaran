@@ -16,10 +16,18 @@ const db = getFirestore(app);
 window.addEventListener("DOMContentLoaded", async () => {
     try {
         const docSnap = await getDoc(doc(db, "situs", "pengaturan"));
+        
+        // Sembunyikan loading apapun yang terjadi agar halaman tidak stuck
+        const loadingEl = document.getElementById("loading-container");
+        if (loadingEl) loadingEl.style.display = "none";
+        
+        const contentEl = document.getElementById("content-container");
+        if (contentEl) contentEl.style.display = "block";
+
         if (docSnap.exists()) {
             const data = docSnap.data();
             
-            if (document.getElementById("judul-situs")) document.getElementById("judul-situs").innerText = data.judul || "Pendaftaran Sekolah";
+            if (document.getElementById("judul-situs")) document.getElementById("judul-situs".innerText = data.judul || "Pendaftaran Sekolah");
             if (document.getElementById("tagline-situs")) document.getElementById("tagline-situs").innerText = data.tagline || "";
             
             const btnPendaftaran = document.getElementById("btn-pendaftaran-utama");
@@ -27,7 +35,6 @@ window.addEventListener("DOMContentLoaded", async () => {
                 btnPendaftaran.href = data.pendaftaranLink;
             }
 
-            // Tampilkan tombol download brosur jika ada linknya di database
             const levels = ["tkq", "ula", "wustho", "ulya"];
             levels.forEach(lvl => {
                 const btnBrosur = document.getElementById(`btn-brosur-${lvl}`);
@@ -36,17 +43,13 @@ window.addEventListener("DOMContentLoaded", async () => {
                     btnBrosur.style.display = "block";
                 }
             });
-
-            // Sembunyikan teks memuat / tampilkan konten
-            const loadingEl = document.getElementById("loading-container");
-            if (loadingEl) loadingEl.style.display = "none";
-            
-            const contentEl = document.getElementById("content-container");
-            if (contentEl) contentEl.style.display = "block";
-        } else {
-            console.log("Belum ada data pengaturan di Firestore.");
         }
     } catch (err) {
         console.error("Gagal memuat data publik:", err);
+        // Tetap hilangkan loading jika terjadi error agar halaman bisa diakses
+        const loadingEl = document.getElementById("loading-container");
+        if (loadingEl) loadingEl.style.display = "none";
+        const contentEl = document.getElementById("content-container");
+        if (contentEl) contentEl.style.display = "block";
     }
 });
