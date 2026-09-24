@@ -21,7 +21,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         if (docSnap.exists()) {
             const data = docSnap.data();
             
-            // Masukkan data teks jika ada
             if (data.judul && document.getElementById("text-judul")) {
                 document.getElementById("text-judul").innerText = data.judul;
             }
@@ -29,13 +28,11 @@ window.addEventListener("DOMContentLoaded", async () => {
                 document.getElementById("text-tagline").innerText = data.tagline;
             }
             
-            // Link Pendaftaran
             const btnPendaftaran = document.getElementById("btn-pendaftaran");
             if (btnPendaftaran && data.pendaftaranLink) {
                 btnPendaftaran.href = data.pendaftaranLink;
             }
 
-            // Atur Tombol Brosur per Tingkatan
             const levels = ["tkq", "ula", "wustho", "ulya"];
             levels.forEach(lvl => {
                 const btnBrosur = document.getElementById(`btn-brosur-${lvl}`);
@@ -51,6 +48,5 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
     } catch (err) {
         console.error("Gagal memuat data publik:", err);
-        // Jangan hentikan total, biarkan halaman tetap tampil
     }
 });
