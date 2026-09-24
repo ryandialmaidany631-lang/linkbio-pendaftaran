@@ -1,12 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Muat Judul & Tagline
     const title = localStorage.getItem("schoolTitle");
     if (title) document.getElementById("display-judul").innerText = title;
 
     const tagline = localStorage.getItem("schoolTagline");
     if (tagline) document.getElementById("display-tagline").innerText = tagline;
 
-    // 2. Muat Logo Sekolah
     const logo = localStorage.getItem("schoolLogo");
     if (logo) {
         const logoImg = document.getElementById("display-logo");
@@ -14,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
         logoImg.style.display = "block";
     }
 
-    // 3. Muat Link Pendaftaran
     const pendaftaranLink = localStorage.getItem("pendaftaranLink");
     const pendaftaranBtn = document.getElementById("link-pendaftaran");
     if (pendaftaranLink) {
@@ -24,7 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
         pendaftaranBtn.onclick = (e) => { e.preventDefault(); alert("Link pendaftaran belum diatur oleh admin."); };
     }
 
-    // 4. Muat 3 Tombol WhatsApp
     const waContainer = document.getElementById("whatsapp-container");
     waContainer.innerHTML = "";
 
@@ -46,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 5. Muat 4 Tombol Brosur Tingkatan (TKQ, ULA, WUSTHO, ULYA)
     const brochureContainer = document.getElementById("brochure-container");
     brochureContainer.innerHTML = "";
 
