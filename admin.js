@@ -14,7 +14,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Konfigurasi Supabase dengan Legacy Anon Key Anda
+// Kunci Supabase menggunakan Legacy Anon Key yang Anda berikan
 const SUPABASE_URL = 'https://wnstuvnvrfiqmohtkfme.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Induc3R1dm52cmZpcW1vaHRrZm1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyMTE1MzksImV4cCI6MjEwNTc4NzUzOX0.AY-gLTVCQVqu3skr0feamHZRt7-Lob8ls3Ab7SDTVxM'; 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -39,7 +39,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// Proses Simpan & Upload Brosur
+// Proses Simpan & Upload Brosur ke Supabase Storage
 document.getElementById("form-admin").addEventListener("submit", async (e) => {
     e.preventDefault();
     
@@ -65,7 +65,8 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             const fileInput = document.getElementById(`input-brosur-${lvl}`);
             if (fileInput && fileInput.files[0]) {
                 const file = fileInput.files[0];
-                const fileName = `brosur_${lvl}_${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+                const cleanName = file.name.replace(/[^a-zA-Z0-9_.-]/g, '_');
+                const fileName = `brosur_${lvl}_${Date.now()}_${cleanName}`;
                 
                 const { error: uploadError } = await supabase.storage
                     .from('brosur')
@@ -86,7 +87,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             }
         }
 
-        // Simpan data ke Firestore Database
+        // Simpan data teks & URL Supabase ke Firestore Database
         await setDoc(docRef, updatedData);
         
         saveBtn.innerText = "SIMPAN PERUBAHAN";
