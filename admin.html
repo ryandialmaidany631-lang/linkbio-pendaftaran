@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin • Link Bio</title><link rel="stylesheet" href="style.css"></head>
+<body><main class="wrap"><section class="card admin">
+<h1>Admin Link Bio</h1><p class="muted">Mode prototype: perubahan disimpan di browser ini.</p>
+<label>Nama sekolah<input id="schoolName"></label><label>Tagline<input id="tagline"></label>
+<h2>Link utama</h2><label>Website Pendaftaran<input id="website"></label><label>WhatsApp Admin<input id="whatsapp"></label>
+<h2>Menu Brosur</h2><div id="brochures"></div>
+<button class="save" onclick="save()">SIMPAN PERUBAHAN</button><button class="reset" onclick="resetData()">KEMBALIKAN DEFAULT</button>
+<p class="note">Untuk versi online yang benar-benar bisa mengubah link dan upload PDF dari HP, kita perlu menghubungkan halaman ini ke database/storage gratis (misalnya Supabase/Firebase). GitHub Pages sendiri hanya menyajikan file HTML/CSS/JS dan tidak menjalankan PHP/server-side code.</p>
+<a href="index.html">← Lihat halaman publik</a>
+</section></main><script src="config.js"></script><script src="admin.js"></script></body></html>
