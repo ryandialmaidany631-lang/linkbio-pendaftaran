@@ -13,81 +13,44 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-document.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener("DOMContentLoaded", async () => {
     try {
         const docRef = doc(db, "situs", "pengaturan");
         const docSnap = await getDoc(docRef);
-
+        
         if (docSnap.exists()) {
             const data = docSnap.data();
-
-            // Judul & Tagline
-            if (data.judul) document.getElementById("display-judul").innerText = data.judul;
-            if (data.tagline) document.getElementById("display-tagline").innerText = data.tagline;
-
-            // Logo
-            if (data.logoUrl) {
-                const logoImg = document.getElementById("display-logo");
-                logoImg.src = data.logoUrl;
-                document.getElementById("logo-box").style.display = "block";
-            }
-
-            // Link Pendaftaran
-            const btnPendaftaran = document.getElementById("link-pendaftaran");
-            if (data.pendaftaranLink) {
-                btnPendaftaran.href = data.pendaftaranLink;
-                btnPendaftaran.style.display = "block";
-            }
-
-            // Tombol WhatsApp
-            const waContainer = document.getElementById("whatsapp-container");
-            waContainer.innerHTML = "";
-            for (let i = 1; i <= 3; i++) {
-                if (data[`waName${i}`] && data[`waNumber${i}`]) {
-                    const cleanNum = data[`waNumber${i}`].replace(/\D/g, '');
-                    const a = document.createElement("a");
-                    a.href = `https://wa.me/${cleanNum}?text=${encodeURIComponent("Halo, saya ingin bertanya mengenai informasi pendaftaran.")}`;
-                    a.className = "btn btn-whatsapp";
-                    a.target = "_blank";
-                    a.innerText = `WhatsApp: ${data[`waName${i}`]}`;
-                    waContainer.appendChild(a);
-                }
-            }
-
-            // Brosur 4 Tingkatan
-            const brochureContainer = document.getElementById("brochure-container");
-            brochureContainer.innerHTML = "";
             
-            const levels = [
-                { key: "tkq", label: "Brosur TKQ" },
-                { key: "ula", label: "Brosur ULA (SD)" },
-                { key: "wustho", label: "Brosur WUSTHO (SMP)" },
-                { key: "ulya", label: "Brosur ULYA (SMA)" }
-            ];
+            // Masukkan data teks jika ada
+            if (data.judul && document.getElementById("text-judul")) {
+                document.getElementById("text-judul").innerText = data.judul;
+            }
+            if (data.tagline && document.getElementById("text-tagline")) {
+                document.getElementById("text-tagline").innerText = data.tagline;
+            }
+            
+            // Link Pendaftaran
+            const btnPendaftaran = document.getElementById("btn-pendaftaran");
+            if (btnPendaftaran && data.pendaftaranLink) {
+                btnPendaftaran.href = data.pendaftaranLink;
+            }
 
+            // Atur Tombol Brosur per Tingkatan
+            const levels = ["tkq", "ula", "wustho", "ulya"];
             levels.forEach(lvl => {
-                const fileUrl = data[`brochure_${lvl.key}`];
-                const a = document.createElement("a");
-                a.className = "btn btn-brochure";
-                
-                if (fileUrl) {
-                    a.href = fileUrl;
-                    a.target = "_blank";
-                    a.innerText = `📥 Download ${lvl.label}`;
-                } else {
-                    a.href = "#";
-                    a.className += " btn-disabled";
-                    a.innerText = `📥 ${lvl.label} (Belum Tersedia)`;
-                    a.onclick = (e) => { e.preventDefault(); alert(`Brosur ${lvl.label} belum di-upload.`); };
+                const btnBrosur = document.getElementById(`btn-brosur-${lvl}`);
+                if (btnBrosur) {
+                    if (data[`brochure_${lvl}`]) {
+                        btnBrosur.href = data[`brochure_${lvl}`];
+                        btnBrosur.style.display = "block";
+                    } else {
+                        btnBrosur.style.display = "none";
+                    }
                 }
-                brochureContainer.appendChild(a);
             });
-        } else {
-            document.getElementById("display-judul").innerText = "Belum ada data di Firebase";
-            document.getElementById("display-tagline").innerText = "Silakan isi data melalui halaman Admin terlebih dahulu.";
         }
     } catch (err) {
-        console.error("Gagal memuat data dari Firebase:", err);
-        document.getElementById("display-judul").innerText = "Gagal Memuat Data";
+        console.error("Gagal memuat data publik:", err);
+        // Jangan hentikan total, biarkan halaman tetap tampil
     }
 });
