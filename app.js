@@ -46,7 +46,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                 linkPendaftaran.style.display = "block";
             }
 
-            // 4. Kontak WhatsApp (maksimal 3 admin)
+            // 4. Kontak WhatsApp (Dibersihkan otomatis agar langsung terhubung ke WA)
             const waWrapper = document.getElementById("whatsapp-section-wrapper");
             const waContainer = document.getElementById("whatsapp-container");
             if (waContainer && waWrapper) {
@@ -55,10 +55,14 @@ window.addEventListener("DOMContentLoaded", async () => {
                 
                 for (let i = 1; i <= 3; i++) {
                     const name = data[`waName${i}`];
-                    const num = data[`waNumber${i}`];
-                    if (name && num) {
+                    let rawNumber = data[`waNumber${i}`] || "";
+                    
+                    // Membersihkan nomor dari karakter non-angka (seperti spasi, +, -, atau teks https://wa.me/)
+                    let cleanNumber = rawNumber.replace(/[^0-9]/g, "");
+
+                    if (name && cleanNumber) {
                         hasWa = true;
-                        waHtml += `<a href="https://wa.me/${num}" target="_blank" style="display:block; background-color: #22c55e; color: white; padding: 11px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-bottom: 10px; font-size: 14px; box-shadow: 0 2px 4px rgba(34,197,94,0.2); transition: background 0.2s;">${name}</a>`;
+                        waHtml += `<a href="https://wa.me/${cleanNumber}" target="_blank" style="display:block; background-color: #22c55e; color: white; padding: 11px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-bottom: 10px; font-size: 14px; box-shadow: 0 2px 4px rgba(34,197,94,0.2); transition: background 0.2s;">${name}</a>`;
                     }
                 }
                 
