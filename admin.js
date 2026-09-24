@@ -61,7 +61,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             waNumber3: document.getElementById("wa-number-3").value,
         };
 
-        // Upload Logo
+        // Upload Logo (Hanya jika dipilih)
         const logoFile = document.getElementById("input-logo").files[0];
         if (logoFile) {
             const logoRef = ref(storage, 'uploads/logo_' + Date.now() + '_' + logoFile.name);
@@ -69,7 +69,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             updatedData.logoUrl = await getDownloadURL(logoRef);
         }
 
-        // Upload 4 Brosur PDF
+        // Upload Brosur (Hanya tingkatan yang file-nya di-klik/dipilih)
         const levels = ["tkq", "ula", "wustho", "ulya"];
         for (const lvl of levels) {
             const fileInput = document.getElementById(`input-brosur-${lvl}`).files[0];
@@ -82,7 +82,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
 
         await setDoc(docRef, updatedData);
         
-        // Munculkan Pop-up Sukses yang Cantik
+        // Munculkan Pop-up Sukses
         document.getElementById("success-modal").style.display = "flex";
 
     } catch (err) {
