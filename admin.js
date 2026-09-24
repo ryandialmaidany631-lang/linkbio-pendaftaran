@@ -61,7 +61,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             waNumber3: document.getElementById("wa-number-3").value,
         };
 
-        // Upload Logo (Hanya jika dipilih)
+        // Upload Logo
         const logoFile = document.getElementById("input-logo").files[0];
         if (logoFile) {
             const logoRef = ref(storage, 'uploads/logo_' + Date.now() + '_' + logoFile.name);
@@ -69,7 +69,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             updatedData.logoUrl = await getDownloadURL(logoRef);
         }
 
-        // Upload Brosur (Hanya tingkatan yang file-nya di-klik/dipilih)
+        // Upload Brosur
         const levels = ["tkq", "ula", "wustho", "ulya"];
         for (const lvl of levels) {
             const fileInput = document.getElementById(`input-brosur-${lvl}`).files[0];
@@ -87,7 +87,8 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
 
     } catch (err) {
         console.error("Gagal menyimpan:", err);
-        alert("Terjadi kesalahan saat menyimpan: " + err.message);
+        // Jika ada error, tombol dikembalikan agar Anda tahu pesan kesalahannya
+        alert("Gagal mengupload: " + err.message);
         saveBtn.innerText = "SIMPAN PERUBAHAN";
         saveBtn.disabled = false;
     }
