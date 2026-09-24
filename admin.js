@@ -30,7 +30,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             
             for (let i = 1; i <= 3; i++) {
                 if (data[`waName${i}`]) document.getElementById(`wa-name-${i}`).value = data[`waName${i}`];
-                if (data[`waNumber${i}`]) document.getElementById(`wa-number-${i}`].value = data[`waNumber${i}`];
+                if (data[`waNumber${i}`]) document.getElementById(`wa-number-${i}`).value = data[`waNumber${i}`];
             }
         }
     } catch (err) {
@@ -38,12 +38,12 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// Proses Simpan & Upload Brosur ke Supabase Storage
+// Proses Simpan & Upload Data ke Supabase & Firestore
 document.getElementById("form-admin").addEventListener("submit", async (e) => {
     e.preventDefault();
     
     const saveBtn = document.querySelector(".btn-save");
-    saveBtn.innerText = "SEDANG MENGUPLOAD...";
+    saveBtn.innerText = "SEDANG MENYIMPAN...";
     saveBtn.disabled = true;
 
     try {
@@ -58,16 +58,23 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             pendaftaranLink: document.getElementById("input-pendaftaran") ? document.getElementById("input-pendaftaran").value : "",
         };
 
+        // Ambil data inputan WhatsApp 1 sampai 3
+        for (let i = 1; i <= 3; i++) {
+            const nameVal = document.getElementById(`wa-name-${i}`)?.value || "";
+            const numVal = document.getElementById(`wa-number-${i}`)?.value || "";
+            updatedData[`waName${i}`] = nameVal;
+            updatedData[`waNumber${i}`] = numVal;
+        }
+
+        // Upload Brosur per Tingkatan ke Supabase Storage
         const levels = ["tkq", "ula", "wustho", "ulya"];
         for (const lvl of levels) {
             const fileInput = document.getElementById(`input-brosur-${lvl}`);
             if (fileInput && fileInput.files[0]) {
                 const file = fileInput.files[0];
-                // Bersihkan nama file dari spasi dan karakter khusus agar aman di URL storage
                 const cleanFileName = file.name.replace(/[^a-zA-Z0-9_.-]/g, '_');
                 const filePath = `brosur_${lvl}_${Date.now()}_${cleanFileName}`;
                 
-                // Upload ke Supabase Storage bucket 'brosur'
                 const { error: uploadError } = await supabase.storage
                     .from('brosur')
                     .upload(filePath, file, {
@@ -79,7 +86,6 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
                     throw new Error(`Gagal upload brosur ${lvl}: ` + uploadError.message);
                 }
 
-                // Ambil Public URL dari file yang baru di-upload
                 const { data: publicUrlData } = supabase.storage
                     .from('brosur')
                     .getPublicUrl(filePath);
@@ -88,7 +94,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             }
         }
 
-        // Simpan data teks dan link URL brosur ke Firestore
+        // Simpan ke Firestore
         await setDoc(docRef, updatedData);
         
         saveBtn.innerText = "SIMPAN PERUBAHAN";
@@ -99,7 +105,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
         if (modal) {
             modal.style.display = "flex";
         } else {
-            alert("Perubahan dan brosur berhasil disimpan!");
+            alert("Data dan brosur berhasil disimpan!");
             location.reload();
         }
 
