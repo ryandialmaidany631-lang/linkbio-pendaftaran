@@ -3,39 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Cache-Control meta untuk mencegah browser menyimpan cache lama secara berlebihan -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Pendaftaran & Informasi Sekolah</title>
-    <link rel="stylesheet" href="style.css?v=300">
+    <link rel="stylesheet" href="style.css?v=302">
 </head>
 <body>
-    <div class="container">
+    <div class="container" style="max-width: 480px; margin: 40px auto; padding: 25px; text-align: center; background: #ffffff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+        
         <!-- Logo Sekolah -->
-        <div class="logo-container" id="logo-box" style="display: none;">
-            <img id="display-logo" src="" alt="Logo Sekolah">
+        <div id="logo-container" style="margin-bottom: 15px; display: none;">
+            <img id="display-logo" src="" alt="Logo Sekolah" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%;">
         </div>
 
-        <h1 id="display-judul">Memuat...</h1>
-        <p id="display-tagline" class="tagline">Informasi Pendaftaran dan Brosur Resmi</p>
+        <!-- Judul & Tagline -->
+        <h1 id="display-judul" style="font-size: 20px; font-weight: bold; margin-bottom: 8px; color: #0f172a; line-height: 1.4;">Memuat...</h1>
+        <p id="display-tagline" style="font-size: 13px; color: #64748b; margin-bottom: 25px; line-height: 1.4;">Informasi Pendaftaran dan Brosur Resmi</p>
 
-        <!-- Website Pendaftaran -->
-        <div class="link-section">
-            <a id="link-pendaftaran" href="#" target="_blank" class="btn btn-primary" style="display:none;">Website Pendaftaran Online</a>
+        <!-- Website Pendaftaran Online -->
+        <div class="link-section" style="margin-bottom: 20px;">
+            <a id="link-pendaftaran" href="#" target="_blank" class="btn btn-primary" style="display: none; background-color: #0f172a; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; width: 100%; box-sizing: border-box; font-size: 14px; box-shadow: 0 2px 4px rgba(15,23,42,0.2);">Website Pendaftaran Online</a>
         </div>
 
-        <!-- Tombol WhatsApp -->
-        <div class="whatsapp-section" id="whatsapp-container"></div>
+        <!-- Tombol WhatsApp (Kontak Person) -->
+        <div id="whatsapp-section-wrapper" style="display: none; margin-bottom: 25px;">
+            <div style="font-weight: 700; font-size: 12px; color: #475569; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Kontak Informasi & Pendaftaran</div>
+            <div id="whatsapp-container"></div>
+        </div>
 
         <!-- Brosur 4 Tingkatan -->
-        <div class="brochure-section">
-            <div class="section-title" style="border:none; text-align:center; margin-bottom:12px;">Download Brosur Pendaftaran</div>
+        <div id="brochure-section-wrapper" style="display: none;">
+            <div style="font-weight: 700; font-size: 12px; color: #475569; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Download Brosur Pendaftaran</div>
             <div id="brochure-container"></div>
         </div>
     </div>
 
-    <!-- Firebase SDK & Script Utama -->
-    <script type="module" src="app.js?v=300"></script>
+    <!-- Script Utama -->
+    <script type="module" src="app.js?v=302"></script>
 </body>
 </html>
