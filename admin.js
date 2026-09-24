@@ -35,10 +35,13 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// Simpan perubahan ke Firebase
+// Simpan perubahan ke Firebase & Munculkan Pop-up Modal Sukses
 document.getElementById("form-admin").addEventListener("submit", async (e) => {
     e.preventDefault();
-    alert("Sedang mengupload file dan menyimpan data, mohon tunggu sebentar...");
+    
+    const saveBtn = document.querySelector(".btn-save");
+    saveBtn.innerText = "SEDANG MENGUPLOAD...";
+    saveBtn.disabled = true;
 
     try {
         const docRef = doc(db, "situs", "pengaturan");
@@ -66,7 +69,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             updatedData.logoUrl = await getDownloadURL(logoRef);
         }
 
-        // Upload 4 Brosur PDF (TKQ, ULA, WUSTHO, ULYA)
+        // Upload 4 Brosur PDF
         const levels = ["tkq", "ula", "wustho", "ulya"];
         for (const lvl of levels) {
             const fileInput = document.getElementById(`input-brosur-${lvl}`).files[0];
@@ -78,10 +81,19 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
         }
 
         await setDoc(docRef, updatedData);
-        alert("Berhasil! Data dan brosur PDF telah tersimpan secara online di Firebase.");
-        location.reload();
+        
+        // Munculkan Pop-up Sukses yang Cantik
+        document.getElementById("success-modal").style.display = "flex";
+
     } catch (err) {
         console.error("Gagal menyimpan:", err);
         alert("Terjadi kesalahan saat menyimpan: " + err.message);
+        saveBtn.innerText = "SIMPAN PERUBAHAN";
+        saveBtn.disabled = false;
     }
+});
+
+// Tombol OK pada Pop-up
+document.getElementById("modal-ok-btn").addEventListener("click", () => {
+    location.reload();
 });
