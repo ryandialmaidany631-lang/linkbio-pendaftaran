@@ -14,14 +14,32 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// KONFIGURASI SUPABASE (Pastikan URL dan Anon Key Anda benar)
+// Konfigurasi Supabase dengan Legacy Anon Key Anda
 const SUPABASE_URL = 'https://wnstuvnvrfiqmohtkfme.supabase.co';
-const SUPABASE_KEY = 'MASUKKAN_ANON_KEY_ANDA_DISINI'; 
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Induc3R1dm52cmZpcW1vaHRrZm1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyMTE1MzksImV4cCI6MjEwNTc4NzUzOX0.AY-gLTVCQVqu3skr0feamHZRt7-Lob8ls3Ab7SDTVxM'; 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Nama bucket di Supabase (Pastikan huruf kecil semua dan sama persis dengan di dashboard)
-const BUCKET_NAME = 'brosur';
+// Muat data lama ke form admin saat dibuka
+window.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const docSnap = await getDoc(doc(db, "situs", "pengaturan"));
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            if (data.judul) document.getElementById("input-judul").value = data.judul;
+            if (data.tagline) document.getElementById("input-tagline").value = data.tagline;
+            if (data.pendaftaranLink) document.getElementById("input-pendaftaran").value = data.pendaftaranLink;
+            
+            for (let i = 1; i <= 3; i++) {
+                if (data[`waName${i}`]) document.getElementById(`wa-name-${i}`).value = data[`waName${i}`];
+                if (data[`waNumber${i}`]) document.getElementById(`wa-number-${i}`).value = data[`waNumber${i}`];
+            }
+        }
+    } catch (err) {
+        console.error("Gagal memuat form admin:", err);
+    }
+});
 
+// Proses Simpan & Upload Brosur
 document.getElementById("form-admin").addEventListener("submit", async (e) => {
     e.preventDefault();
     
@@ -49,28 +67,26 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
                 const file = fileInput.files[0];
                 const fileName = `brosur_${lvl}_${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
                 
-                // Perintah upload ke Supabase
-                const { data, error: uploadError } = await supabase.storage
-                    .from(BUCKET_NAME)
+                const { error: uploadError } = await supabase.storage
+                    .from('brosur')
                     .upload(fileName, file, { 
                         cacheControl: '3600',
                         upsert: true 
                     });
 
                 if (uploadError) {
-                    throw new Error(`Gagal upload ${lvl}: ` + uploadError.message);
+                    throw new Error(`Gagal upload brosur ${lvl}: ` + uploadError.message);
                 }
 
-                // Ambil Public URL dari file yang di-upload
                 const { data: publicUrlData } = supabase.storage
-                    .from(BUCKET_NAME)
+                    .from('brosur')
                     .getPublicUrl(fileName);
                     
                 updatedData[`brochure_${lvl}`] = publicUrlData.publicUrl;
             }
         }
 
-        // Simpan ke Firestore
+        // Simpan data ke Firestore Database
         await setDoc(docRef, updatedData);
         
         saveBtn.innerText = "SIMPAN PERUBAHAN";
@@ -93,6 +109,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
     }
 });
 
+// Tombol OK pada Pop-up
 const okBtn = document.getElementById("modal-ok-btn");
 if (okBtn) {
     okBtn.addEventListener("click", () => {
