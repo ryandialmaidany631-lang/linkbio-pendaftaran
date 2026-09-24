@@ -35,7 +35,7 @@
             margin-bottom: 6px;
             font-size: 14px;
         }
-        input[type="text"], input[type="url"] {
+        input[type="text"], input[type="url"], input[type="file"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #cbd5e1;
@@ -43,11 +43,8 @@
             box-sizing: border-box;
             font-size: 14px;
         }
-        small {
-            display: block;
-            margin-top: 4px;
-            color: #64748b;
-            font-size: 12px;
+        input[type="file"] {
+            background: #f8fafc;
         }
         .brochure-section {
             background: #f8fafc;
@@ -89,6 +86,23 @@
         .back-link:hover {
             text-decoration: underline;
         }
+        .status-badge {
+            font-size: 12px;
+            color: #059669;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: none;
+        }
+        .btn-delete-file {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 8px;
+            font-size: 11px;
+        }
     </style>
 </head>
 <body>
@@ -98,11 +112,14 @@
 
     <form id="form-admin">
         
-        <!-- URL Logo Sekolah -->
+        <!-- Upload Logo Sekolah -->
         <div class="mb-3" style="padding: 15px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
-            <label for="input-logo-url">Link URL Logo Sekolah</label>
-            <input type="url" id="input-logo-url" placeholder="https://i.ibb.co/... atau link gambar publik">
-            <small>Masukkan link gambar logo (bisa upload dulu ke Imgur, PostImage, atau Google Drive publik).</small>
+            <label>Logo Sekolah</label>
+            <div id="status-logo" class="status-badge">
+                ✓ Logo sudah diupload. 
+                <button type="button" id="btn-hapus-logo" class="btn-delete-file">Hapus / Ganti</button>
+            </div>
+            <input type="file" id="input-logo" accept="image/*">
         </div>
 
         <!-- Pengaturan Teks Utama -->
@@ -151,32 +168,48 @@
             <input type="text" id="wa-number-3" placeholder="628xxxxxxxxxx">
         </div>
 
-        <!-- Link Brosur per Tingkatan -->
+        <!-- Upload Brosur per Tingkatan (PDF/Gambar) -->
         <div class="brochure-section">
-            <h3>Link URL Brosur per Tingkatan</h3>
+            <h3>Upload Brosur per Tingkatan (PDF/Gambar)</h3>
 
             <!-- Brosur TKQ -->
             <div class="mb-3">
-                <label>Link Brosur TKQ</label>
-                <input type="url" id="input-brosur-tkq" placeholder="https://...">
+                <label>Brosur TKQ</label>
+                <div id="status-brosur-tkq" class="status-badge">
+                    ✓ Brosur sudah diupload. 
+                    <button type="button" id="btn-hapus-tkq" class="btn-delete-file">Hapus / Ganti</button>
+                </div>
+                <input type="file" id="input-brosur-tkq" accept=".pdf, image/*">
             </div>
 
             <!-- Brosur ULA -->
             <div class="mb-3">
-                <label>Link Brosur ULA (SD)</label>
-                <input type="url" id="input-brosur-ula" placeholder="https://...">
+                <label>Brosur ULA (SD)</label>
+                <div id="status-brosur-ula" class="status-badge">
+                    ✓ Brosur sudah diupload. 
+                    <button type="button" id="btn-hapus-ula" class="btn-delete-file">Hapus / Ganti</button>
+                </div>
+                <input type="file" id="input-brosur-ula" accept=".pdf, image/*">
             </div>
 
             <!-- Brosur WUSTHO -->
             <div class="mb-3">
-                <label>Link Brosur WUSTHO (SMP)</label>
-                <input type="url" id="input-brosur-wustho" placeholder="https://...">
+                <label>Brosur WUSTHO (SMP)</label>
+                <div id="status-brosur-wustho" class="status-badge">
+                    ✓ Brosur sudah diupload. 
+                    <button type="button" id="btn-hapus-wustho" class="btn-delete-file">Hapus / Ganti</button>
+                </div>
+                <input type="file" id="input-brosur-wustho" accept=".pdf, image/*">
             </div>
 
             <!-- Brosur ULYA -->
             <div class="mb-3">
-                <label>Link Brosur ULYA (SMA)</label>
-                <input type="url" id="input-brosur-ulya" placeholder="https://...">
+                <label>Brosur ULYA (SMA)</label>
+                <div id="status-brosur-ulya" class="status-badge">
+                    ✓ Brosur sudah diupload. 
+                    <button type="button" id="btn-hapus-ulya" class="btn-delete-file">Hapus / Ganti</button>
+                </div>
+                <input type="file" id="input-brosur-ulya" accept=".pdf, image/*">
             </div>
         </div>
 
