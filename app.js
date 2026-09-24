@@ -20,15 +20,25 @@ window.addEventListener("DOMContentLoaded", async () => {
         if (docSnap.exists()) {
             const data = docSnap.data();
             
-            // 1. Judul & Tagline
+            // 1. Judul & Tagline (Pemisahan Baris Otomatis: Baris 1 TKQ, Baris 2 Ponpes)
             const judulEl = document.getElementById("display-judul");
             if (judulEl) {
-                judulEl.innerText = data.judul || "Pendaftaran Sekolah";
+                let rawJudul = data.judul || "TKQ Luqmanul Hakim Ponpes Luqmanul Hakim Medan";
+                
+                if (rawJudul.toUpperCase().includes("PONPES")) {
+                    let parts = rawJudul.split(/ponpes/i);
+                    let baris1 = parts[0].trim();
+                    let baris2 = "PONPES " + parts[1].trim();
+                    
+                    judulEl.innerHTML = `${baris1}<br><span style="font-size: 17px; font-weight: 700; color: #2563eb; display: inline-block; margin-top: 4px;">${baris2}</span>`;
+                } else {
+                    judulEl.innerText = rawJudul;
+                }
             }
             
             const taglineEl = document.getElementById("display-tagline");
             if (taglineEl) {
-                taglineEl.innerText = data.tagline || "Informasi Pendaftaran dan Brosur Resmi";
+                taglineEl.innerText = data.tagline || "Link Pendaftaran & Info Pendaftaran";
             }
             
             // 2. Logo Sekolah
@@ -56,13 +66,11 @@ window.addEventListener("DOMContentLoaded", async () => {
                 for (let i = 1; i <= 3; i++) {
                     const name = data[`waName${i}`];
                     let rawNumber = data[`waNumber${i}`] || "";
-                    
-                    // Membersihkan nomor dari karakter non-angka (seperti spasi, +, -, atau teks https://wa.me/)
                     let cleanNumber = rawNumber.replace(/[^0-9]/g, "");
 
                     if (name && cleanNumber) {
                         hasWa = true;
-                        waHtml += `<a href="https://wa.me/${cleanNumber}" target="_blank" style="display:block; background-color: #22c55e; color: white; padding: 11px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-bottom: 10px; font-size: 14px; box-shadow: 0 2px 4px rgba(34,197,94,0.2); transition: background 0.2s;">${name}</a>`;
+                        waHtml += `<a href="https://wa.me/${cleanNumber}" target="_blank">${name}</a>`;
                     }
                 }
                 
@@ -90,7 +98,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                     const url = data[`brochure_${lvl.key}`];
                     if (url) {
                         hasBrochure = true;
-                        brochureHtml += `<a href="${url}" target="_blank" style="display:block; background-color: #f8fafc; color: #1e293b; border: 1px solid #cbd5e1; padding: 11px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-bottom: 10px; font-size: 14px; transition: background 0.2s;">${lvl.label}</a>`;
+                        brochureHtml += `<a href="${url}" target="_blank">${lvl.label}</a>`;
                     }
                 });
                 
