@@ -7,39 +7,183 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Pendaftaran & Informasi Sekolah</title>
-    <link rel="stylesheet" href="style.css?v=302">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: #ffffff;
+            margin: auto;
+            padding: 35px 25px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.05);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            text-align: center;
+        }
+        
+        /* Logo Styling - Diperbesar & Lebih Modern */
+        #logo-container {
+            margin-bottom: 20px;
+            display: none;
+        }
+        #display-logo {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+            border-radius: 50%;
+            padding: 4px;
+            background: #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border: 2px solid #f1f5f9;
+            transition: transform 0.3s ease;
+        }
+        #display-logo:hover {
+            transform: scale(1.03);
+        }
+
+        /* Judul & Tagline */
+        #display-judul {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #0f172a;
+            line-height: 1.4;
+            letter-spacing: -0.02em;
+        }
+        #display-tagline {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* Label Section */
+        .section-label {
+            font-weight: 700;
+            font-size: 11px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Link Pendaftaran Utama */
+        .link-section {
+            margin-bottom: 25px;
+        }
+        #link-pendaftaran {
+            display: none;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            width: 100%;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+            transition: all 0.2s ease;
+        }
+        #link-pendaftaran:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.25);
+        }
+
+        /* WhatsApp Section */
+        #whatsapp-section-wrapper {
+            display: none;
+            margin-bottom: 25px;
+        }
+        #whatsapp-container a {
+            display: block;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            padding: 13px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+            transition: all 0.2s ease;
+        }
+        #whatsapp-container a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(34, 197, 94, 0.3);
+        }
+
+        /* Brosur Section */
+        #brochure-section-wrapper {
+            display: none;
+        }
+        #brochure-container a {
+            display: block;
+            background-color: #f8fafc;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+            padding: 13px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        #brochure-container a:hover {
+            background-color: #f1f5f9;
+            border-color: #cbd5e1;
+            color: #0f172a;
+            transform: translateY(-1px);
+        }
+    </style>
 </head>
 <body>
-    <div class="container" style="max-width: 480px; margin: 40px auto; padding: 25px; text-align: center; background: #ffffff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <div class="container">
         
         <!-- Logo Sekolah -->
-        <div id="logo-container" style="margin-bottom: 15px; display: none;">
-            <img id="display-logo" src="" alt="Logo Sekolah" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%;">
+        <div id="logo-container">
+            <img id="display-logo" src="" alt="Logo Sekolah">
         </div>
 
         <!-- Judul & Tagline -->
-        <h1 id="display-judul" style="font-size: 20px; font-weight: bold; margin-bottom: 8px; color: #0f172a; line-height: 1.4;">Memuat...</h1>
-        <p id="display-tagline" style="font-size: 13px; color: #64748b; margin-bottom: 25px; line-height: 1.4;">Informasi Pendaftaran dan Brosur Resmi</p>
+        <h1 id="display-judul">Memuat...</h1>
+        <p id="display-tagline">Informasi Pendaftaran dan Brosur Resmi</p>
 
         <!-- Website Pendaftaran Online -->
-        <div class="link-section" style="margin-bottom: 20px;">
-            <a id="link-pendaftaran" href="#" target="_blank" class="btn btn-primary" style="display: none; background-color: #0f172a; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; width: 100%; box-sizing: border-box; font-size: 14px; box-shadow: 0 2px 4px rgba(15,23,42,0.2);">Website Pendaftaran Online</a>
+        <div class="link-section">
+            <a id="link-pendaftaran" href="#" target="_blank">Website Pendaftaran Online</a>
         </div>
 
         <!-- Tombol WhatsApp (Kontak Person) -->
-        <div id="whatsapp-section-wrapper" style="display: none; margin-bottom: 25px;">
-            <div style="font-weight: 700; font-size: 12px; color: #475569; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Kontak Informasi & Pendaftaran</div>
+        <div id="whatsapp-section-wrapper">
+            <div class="section-label">Kontak Informasi & Pendaftaran</div>
             <div id="whatsapp-container"></div>
         </div>
 
         <!-- Brosur 4 Tingkatan -->
-        <div id="brochure-section-wrapper" style="display: none;">
-            <div style="font-weight: 700; font-size: 12px; color: #475569; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Download Brosur Pendaftaran</div>
+        <div id="brochure-section-wrapper">
+            <div class="section-label">Download Brosur Pendaftaran</div>
             <div id="brochure-container"></div>
         </div>
     </div>
 
-    <!-- Script Utama -->
-    <script type="module" src="app.js?v=302"></script>
+    <!-- Script Utama (Tidak Berubah) -->
+    <script type="module" src="app.js?v=303"></script>
 </body>
 </html>
