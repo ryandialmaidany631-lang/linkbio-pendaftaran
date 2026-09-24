@@ -20,51 +20,58 @@ window.addEventListener("DOMContentLoaded", async () => {
         if (docSnap.exists()) {
             const data = docSnap.data();
             
-            // 1. Tampilkan Judul & Tagline
+            // 1. Judul & Tagline
             const judulEl = document.getElementById("display-judul");
-            if (judulEl) judulEl.innerText = data.judul || "Pendaftaran Sekolah";
+            if (judulEl) {
+                judulEl.innerText = data.judul || "Pendaftaran Sekolah";
+            }
             
             const taglineEl = document.getElementById("display-tagline");
-            if (taglineEl) taglineEl.innerText = data.tagline || "Informasi Pendaftaran dan Brosur Resmi";
+            if (taglineEl) {
+                taglineEl.innerText = data.tagline || "Informasi Pendaftaran dan Brosur Resmi";
+            }
             
-            // 2. Tampilkan Logo jika ada di database
-            const logoBox = document.getElementById("logo-box");
+            // 2. Logo Sekolah
+            const logoContainer = document.getElementById("logo-container");
             const displayLogo = document.getElementById("display-logo");
-            if (data.logoUrl && logoBox && displayLogo) {
+            if (data.logoUrl && logoContainer && displayLogo) {
                 displayLogo.src = data.logoUrl;
-                logoBox.style.display = "block";
+                logoContainer.style.display = "block";
             }
 
-            // 3. Website Pendaftaran Utama
+            // 3. Website Pendaftaran
             const linkPendaftaran = document.getElementById("link-pendaftaran");
             if (linkPendaftaran && data.pendaftaranLink) {
                 linkPendaftaran.href = data.pendaftaranLink;
                 linkPendaftaran.style.display = "block";
             }
 
-            // 4. Tombol WhatsApp dengan Judul Bagian Kontak
+            // 4. Kontak WhatsApp (maksimal 3 admin)
+            const waWrapper = document.getElementById("whatsapp-section-wrapper");
             const waContainer = document.getElementById("whatsapp-container");
-            if (waContainer) {
+            if (waContainer && waWrapper) {
+                let waHtml = "";
                 let hasWa = false;
-                let waHtml = `<div class="section-title" style="border:none; text-align:center; margin: 20px 0 10px 0; font-weight: bold; font-size: 14px; color: #555;">Kontak Informasi & Pendaftaran</div>`;
                 
                 for (let i = 1; i <= 3; i++) {
                     const name = data[`waName${i}`];
                     const num = data[`waNumber${i}`];
                     if (name && num) {
                         hasWa = true;
-                        waHtml += `<a href="https://wa.me/${num}" target="_blank" class="btn btn-whatsapp" style="display:block; margin-bottom:10px;">${name}</a>`;
+                        waHtml += `<a href="https://wa.me/${num}" target="_blank" style="display:block; background-color: #22c55e; color: white; padding: 11px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-bottom: 10px; font-size: 14px; box-shadow: 0 2px 4px rgba(34,197,94,0.2); transition: background 0.2s;">${name}</a>`;
                     }
                 }
                 
                 if (hasWa) {
                     waContainer.innerHTML = waHtml;
+                    waWrapper.style.display = "block";
                 }
             }
 
-            // 5. Brosur per Tingkatan
+            // 5. Brosur per Tingkatan (TKQ, ULA, WUSTHO, ULYA)
+            const brochureWrapper = document.getElementById("brochure-section-wrapper");
             const brochureContainer = document.getElementById("brochure-container");
-            if (brochureContainer) {
+            if (brochureContainer && brochureWrapper) {
                 const levels = [
                     { key: "tkq", label: "Brosur TKQ" },
                     { key: "ula", label: "Brosur ULA (SD)" },
@@ -73,13 +80,20 @@ window.addEventListener("DOMContentLoaded", async () => {
                 ];
                 
                 let brochureHtml = "";
+                let hasBrochure = false;
+                
                 levels.forEach(lvl => {
                     const url = data[`brochure_${lvl.key}`];
                     if (url) {
-                        brochureHtml += `<a href="${url}" target="_blank" class="btn btn-brochure" style="display:block; margin-bottom:10px;">${lvl.label}</a>`;
+                        hasBrochure = true;
+                        brochureHtml += `<a href="${url}" target="_blank" style="display:block; background-color: #f8fafc; color: #1e293b; border: 1px solid #cbd5e1; padding: 11px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-bottom: 10px; font-size: 14px; transition: background 0.2s;">${lvl.label}</a>`;
                     }
                 });
-                brochureContainer.innerHTML = brochureHtml;
+                
+                if (hasBrochure) {
+                    brochureContainer.innerHTML = brochureHtml;
+                    brochureWrapper.style.display = "block";
+                }
             }
 
         } else {
@@ -88,5 +102,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
     } catch (err) {
         console.error("Gagal memuat data publik:", err);
+        const judulEl = document.getElementById("display-judul");
+        if (judulEl) judulEl.innerText = "Pendaftaran Sekolah";
     }
 });
