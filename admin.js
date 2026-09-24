@@ -106,7 +106,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// Proses Simpan Data Form Admin
+// Proses Simpan Data Form Admin (Aman dari data kosong)
 document.getElementById("form-admin").addEventListener("submit", async (e) => {
     e.preventDefault();
     
@@ -122,19 +122,20 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
         const docSnap = await getDoc(docRef);
         let existingData = docSnap.exists() ? docSnap.data() : {};
 
+        // Ambil data teks dengan aman (pertahankan nilai lama jika input kosong/tidak diubah)
         let updatedData = {
             ...existingData,
-            judul: document.getElementById("input-judul")?.value || "",
-            tagline: document.getElementById("input-tagline")?.value || "",
-            pendaftaranLink: document.getElementById("input-pendaftaran")?.value || "",
+            judul: document.getElementById("input-judul")?.value.trim() || existingData.judul || "",
+            tagline: document.getElementById("input-tagline")?.value.trim() || existingData.tagline || "",
+            pendaftaranLink: document.getElementById("input-pendaftaran")?.value.trim() || existingData.pendaftaranLink || "",
         };
 
         for (let i = 1; i <= 3; i++) {
-            updatedData[`waName${i}`] = document.getElementById(`wa-name-${i}`)?.value || "";
-            updatedData[`waNumber${i}`] = document.getElementById(`wa-number-${i}`)?value || "";
+            updatedData[`waName${i}`] = document.getElementById(`wa-name-${i}`)?.value.trim() || existingData[`waName${i}`] || "";
+            updatedData[`waNumber${i}`] = document.getElementById(`wa-number-${i}`)?.value.trim() || existingData[`waNumber${i}`] || "";
         }
 
-        // 1. Proses Upload Logo Sekolah jika dipilih file baru
+        // 1. Proses Upload Logo Sekolah (Hanya jika admin memilih file baru)
         const logoInput = document.getElementById("input-logo");
         if (logoInput && logoInput.files && logoInput.files[0]) {
             const file = logoInput.files[0];
@@ -159,7 +160,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             updatedData.logoUrl = publicUrlData.publicUrl;
         }
 
-        // 2. Proses Upload Brosur per Tingkatan jika dipilih file baru
+        // 2. Proses Upload Brosur per Tingkatan (Hanya jika admin memilih file baru)
         for (const lvl of levels) {
             const fileInput = document.getElementById(`input-brosur-${lvl}`);
             if (fileInput && fileInput.files && fileInput.files[0]) {
@@ -194,7 +195,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
         }
 
         await muatDataAdmin();
-        alert("Berhasil! Logo, data, dan brosur telah tersimpan.");
+        alert("Berhasil! Perubahan data, logo, dan brosur telah tersimpan.");
 
     } catch (err) {
         console.error("TERJADI ERROR DETAIL:", err);
