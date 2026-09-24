@@ -1,4 +1,4 @@
-/* Reset dan Tata Letak Halaman Utama */
+/* --- TAMPILAN UMUM & BACKGROUND --- */
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f2f5;
@@ -10,19 +10,70 @@ body {
     min-height: 100vh;
 }
 
-/* Kotak Kontainer Utama (Kartu di Tengah) */
+/* --- KOTAK UTAMA (KARTU ADMIN & PUBLIK) --- */
+.admin-container, 
 .container {
     background: #ffffff;
     padding: 30px;
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     width: 100%;
-    max-width: 450px;
+    max-width: 480px;
     box-sizing: border-box;
+}
+
+/* --- HALAMAN ADMIN --- */
+.admin-container h2 {
+    margin-top: 0;
+    color: #1a1a1a;
+    font-size: 22px;
+}
+
+.subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-weight: bold;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="url"],
+.form-group input[type="file"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* --- HALAMAN PUBLIK (LANDING PAGE) --- */
+.container {
     text-align: center;
 }
 
-/* Logo Sekolah */
 .logo-container img {
     width: 90px;
     height: 90px;
@@ -32,7 +83,6 @@ body {
     border: 2px solid #eaeaea;
 }
 
-/* Judul dan Tagline */
 h1 {
     font-size: 20px;
     color: #1a1a1a;
@@ -45,31 +95,31 @@ h1 {
     margin-bottom: 25px;
 }
 
-/* Gaya Tombol Umum */
-.btn {
+/* --- TOMBOL-TOMBOL --- */
+.btn, .btn-save, .btn-default {
     display: block;
     width: 100%;
-    padding: 14px 20px;
+    padding: 12px 20px;
     margin-bottom: 12px;
     border-radius: 8px;
     font-weight: bold;
     font-size: 14px;
     text-decoration: none;
     box-sizing: border-box;
-    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
     text-align: center;
+    transition: background 0.2s;
 }
 
-/* Tombol Utama (Website Pendaftaran - Warna Emas/Kuning) */
-.btn-primary {
-    background-color: #d4af37;
+.btn-primary, .btn-save {
+    background-color: #1b3b6f;
     color: white;
 }
-.btn-primary:hover {
-    background-color: #c19b2e;
+.btn-save:hover, .btn-primary:hover {
+    background-color: #12284d;
 }
 
-/* Tombol WhatsApp (Warna Hijau) */
 .btn-whatsapp {
     background-color: #198754;
     color: white;
@@ -78,7 +128,6 @@ h1 {
     background-color: #157347;
 }
 
-/* Tombol Brosur (Warna Biru Tua) */
 .btn-brochure {
     background-color: #0f2c59;
     color: white;
@@ -87,33 +136,43 @@ h1 {
     background-color: #0b2042;
 }
 
-/* Tombol Jika Belum Aktif/Tersedia */
+.btn-default {
+    background-color: #e2e8f0;
+    color: #333;
+}
+.btn-default:hover {
+    background-color: #cbd5e1;
+}
+
 .btn-disabled {
     background-color: #e2e8f0;
     color: #888;
     cursor: not-allowed;
 }
 
-/* Bagian Seksi Brosur */
-.brochure-section h3 {
-    font-size: 15px;
-    color: #333;
-    margin-top: 25px;
-    margin-bottom: 12px;
-    border-top: 1px solid #eee;
-    padding-top: 15px;
+/* --- INFORMASI & LINK BAWAH --- */
+.info-box {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 20px;
+    line-height: 1.4;
+    text-align: left;
 }
 
-/* Tombol Menuju Admin di Bawah */
-.admin-link-container {
-    margin-top: 25px;
+.back-link, .admin-link-container {
+    margin-top: 15px;
+    text-align: left;
 }
 
-.admin-link-container a {
-    font-size: 12px;
-    color: #888;
+.back-link a, .admin-link-container a {
+    color: #0056b3;
     text-decoration: none;
+    font-size: 12px;
 }
-.admin-link-container a:hover {
+.back-link a:hover, .admin-link-container a:hover {
     text-decoration: underline;
 }
