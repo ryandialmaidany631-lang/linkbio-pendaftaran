@@ -3,34 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Cache-Control meta untuk mencegah browser menyimpan cache lama secara berlebihan -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Pendaftaran & Informasi Sekolah</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=300">
 </head>
 <body>
     <div class="container">
-        <div class="logo-container">
-            <img id="display-logo" src="" alt="Logo Sekolah" style="display: none;">
+        <!-- Logo Sekolah -->
+        <div class="logo-container" id="logo-box" style="display: none;">
+            <img id="display-logo" src="" alt="Logo Sekolah">
         </div>
 
-        <h1 id="display-judul">Nama Sekolah</h1>
+        <h1 id="display-judul">Memuat...</h1>
         <p id="display-tagline" class="tagline">Informasi Pendaftaran dan Brosur Resmi</p>
 
+        <!-- Website Pendaftaran -->
         <div class="link-section">
-            <a id="link-pendaftaran" href="#" target="_blank" class="btn btn-primary">Website Pendaftaran Online</a>
+            <a id="link-pendaftaran" href="#" target="_blank" class="btn btn-primary" style="display:none;">Website Pendaftaran Online</a>
         </div>
 
+        <!-- Tombol WhatsApp -->
         <div class="whatsapp-section" id="whatsapp-container"></div>
 
+        <!-- Brosur 4 Tingkatan -->
         <div class="brochure-section">
             <div class="section-title" style="border:none; text-align:center; margin-bottom:12px;">Download Brosur Pendaftaran</div>
             <div id="brochure-container"></div>
         </div>
-
-        <div class="admin-link-container">
-            <a href="admin.html">⚙️ Masuk Panel Admin</a>
-        </div>
     </div>
 
-    <script src="app.js"></script>
+    <!-- Firebase SDK & Script Utama -->
+    <script type="module" src="app.js?v=300"></script>
 </body>
 </html>
