@@ -1,7 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
+// Konfigurasi Firebase (untuk teks & database admin)
 const firebaseConfig = {
   apiKey: "AIzaSyAX9MlyLRIz7zcFUtKtnqcc4vNSOzerYMQ",
   authDomain: "linkbio-sekolah.firebaseapp.com",
@@ -13,7 +14,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
+
+// KONFIGURASI SUPABASE (Isi dengan URL & Publishable key milik Anda)
+const SUPABASE_URL = 'https://wnstuvnvrfiqmohtkfme.supabase.co';
+const SUPABASE_KEY = 'MASUKKAN_PUBLISHABLE_KEY_ANDA_DI_SINI';
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Muat data lama ke form saat halaman admin dibuka
 window.addEventListener("DOMContentLoaded", async () => {
@@ -35,7 +40,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// Simpan perubahan ke Firebase & Munculkan Pop-up Modal Sukses
+// Simpan perubahan ke Firebase & Upload File ke Supabase Storage
 document.getElementById("form-admin").addEventListener("submit", async (e) => {
     e.preventDefault();
     
@@ -61,25 +66,34 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             waNumber3: document.getElementById("wa-number-3").value,
         };
 
-        // Upload Logo
-        const logoFile = document.getElementById("input-logo").files[0];
-        if (logoFile) {
-            const logoRef = ref(storage, 'uploads/logo_' + Date.now() + '_' + logoFile.name);
-            await uploadBytes(logoRef, logoFile);
-            updatedData.logoUrl = await getDownloadURL(logoRef);
+        // Upload Logo ke Supabase (jika ada file dipilih)
+        const logoInput = document.getElementById("input-logo");
+        if (logoInput && logoInput.files[0]) {
+            const logoFile = logoInput.files[0];
+            const logoName = 'logo_' + Date.now() + '_' + logoFile.name;
+            const { error: logoError } = await supabase.storage.from('brosur').upload(logoName, logoFile);
+            if (logoError) throw logoError;
+
+            const { data: logoUrlData } = supabase.storage.from('brosur').getPublicUrl(logoName);
+            updatedData.logoUrl = logoUrlData.publicUrl;
         }
 
-        // Upload Brosur
+        // Upload Brosur per tingkatan ke Supabase (jika ada file dipilih)
         const levels = ["tkq", "ula", "wustho", "ulya"];
         for (const lvl of levels) {
-            const fileInput = document.getElementById(`input-brosur-${lvl}`).files[0];
-            if (fileInput) {
-                const fileRef = ref(storage, `uploads/brosur_${lvl}_${Date.now()}_${fileInput.name}`);
-                await uploadBytes(fileRef, fileInput);
-                updatedData[`brochure_${lvl}`] = await getDownloadURL(fileRef);
+            const fileInput = document.getElementById(`input-brosur-${lvl}`);
+            if (fileInput && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const fileName = `brosur_${lvl}_${Date.now()}_${file.name}`;
+                const { error: uploadError } = await supabase.storage.from('brosur').upload(fileName, file);
+                if (uploadError) throw uploadError;
+
+                const { data: publicUrlData } = supabase.storage.from('brosur').getPublicUrl(fileName);
+                updatedData[`brochure_${lvl}`] = publicUrlData.publicUrl;
             }
         }
 
+        // Simpan seluruh data teks & link file ke Firestore Database
         await setDoc(docRef, updatedData);
         
         // Munculkan Pop-up Sukses
@@ -87,8 +101,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
 
     } catch (err) {
         console.error("Gagal menyimpan:", err);
-        // Jika ada error, tombol dikembalikan agar Anda tahu pesan kesalahannya
-        alert("Gagal mengupload: " + err.message);
+        alert("Terjadi kesalahan: " + err.message);
         saveBtn.innerText = "SIMPAN PERUBAHAN";
         saveBtn.disabled = false;
     }
