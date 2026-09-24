@@ -14,18 +14,22 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 window.addEventListener("DOMContentLoaded", async () => {
-    // Paksa hilangkan loading terlebih dahulu agar halaman tidak pernah stuck
-    const loadingEl = document.getElementById("loading-container");
-    if (loadingEl) loadingEl.style.display = "none";
+    // 1. Paksa sembunyikan semua elemen yang memiliki kata "loading" atau "memuat"
+    document.querySelectorAll("[id*='load'], [class*='load']").forEach(el => {
+        el.style.display = "none";
+    });
     
-    const contentEl = document.getElementById("content-container");
-    if (contentEl) contentEl.style.display = "block";
+    // 2. Paksa tampilkan kontainer utama
+    document.querySelectorAll("[id*='content'], [id*='main'], [class*='content']").forEach(el => {
+        el.style.display = "block";
+    });
 
     try {
         const docSnap = await getDoc(doc(db, "situs", "pengaturan"));
         if (docSnap.exists()) {
             const data = docSnap.data();
             
+            // Masukkan data teks jika elemennya ada
             if (document.getElementById("judul-situs")) document.getElementById("judul-situs").innerText = data.judul || "Pendaftaran Sekolah";
             if (document.getElementById("tagline-situs")) document.getElementById("tagline-situs").innerText = data.tagline || "";
             
@@ -34,12 +38,13 @@ window.addEventListener("DOMContentLoaded", async () => {
                 btnPendaftaran.href = data.pendaftaranLink;
             }
 
+            // Atur link tombol download brosur per tingkatan
             const levels = ["tkq", "ula", "wustho", "ulya"];
             levels.forEach(lvl => {
                 const btnBrosur = document.getElementById(`btn-brosur-${lvl}`);
                 if (btnBrosur && data[`brochure_${lvl}`]) {
                     btnBrosur.href = data[`brochure_${lvl}`];
-                    btnBrosur.style.display = "block";
+                    btnBrosur.style.display = "inline-block";
                 }
             });
         }
