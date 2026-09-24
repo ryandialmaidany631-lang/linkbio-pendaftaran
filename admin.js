@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// Konfigurasi Firebase (untuk teks & database admin)
+// Konfigurasi Firebase (hanya untuk database teks & pengaturan admin)
 const firebaseConfig = {
   apiKey: "AIzaSyAX9MlyLRIz7zcFUtKtnqcc4vNSOzerYMQ",
   authDomain: "linkbio-sekolah.firebaseapp.com",
@@ -15,9 +15,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// KONFIGURASI SUPABASE (Isi dengan URL & Publishable key milik Anda)
+// KONFIGURASI SUPABASE (Untuk Penyimpanan File Brosur & Logo)
 const SUPABASE_URL = 'https://wnstuvnvrfiqmohtkfme.supabase.co';
-const SUPABASE_KEY = 'MASUKKAN_PUBLISHABLE_KEY_ANDA_DI_SINI';
+const SUPABASE_KEY = 'sb_publishable_J8_7wbWsA-07GyTArFQ_XUpLI...'; // Masukkan publishable key lengkap Anda di sini
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Muat data lama ke form saat halaman admin dibuka
@@ -40,7 +40,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// Simpan perubahan ke Firebase & Upload File ke Supabase Storage
+// Simpan perubahan ke Firestore & Upload File murni menggunakan Supabase Storage
 document.getElementById("form-admin").addEventListener("submit", async (e) => {
     e.preventDefault();
     
@@ -66,34 +66,48 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             waNumber3: document.getElementById("wa-number-3").value,
         };
 
-        // Upload Logo ke Supabase (jika ada file dipilih)
+        // 1. Proses Upload Logo ke Supabase Storage (jika ada file dipilih)
         const logoInput = document.getElementById("input-logo");
         if (logoInput && logoInput.files[0]) {
             const logoFile = logoInput.files[0];
-            const logoName = 'logo_' + Date.now() + '_' + logoFile.name;
-            const { error: logoError } = await supabase.storage.from('brosur').upload(logoName, logoFile);
-            if (logoError) throw logoError;
+            const logoFileName = 'logo_' + Date.now() + '_' + logoFile.name.replace(/\s+/g, '_');
+            
+            const { error: logoError } = await supabase.storage
+                .from('brosur')
+                .upload(logoFileName, logoFile, { upsert: true });
 
-            const { data: logoUrlData } = supabase.storage.from('brosur').getPublicUrl(logoName);
+            if (logoError) throw new Error("Gagal upload logo: " + logoError.message);
+
+            const { data: logoUrlData } = supabase.storage
+                .from('brosur')
+                .getPublicUrl(logoFileName);
+                
             updatedData.logoUrl = logoUrlData.publicUrl;
         }
 
-        // Upload Brosur per tingkatan ke Supabase (jika ada file dipilih)
+        // 2. Proses Upload Brosur per Tingkatan ke Supabase Storage (jika ada file dipilih)
         const levels = ["tkq", "ula", "wustho", "ulya"];
         for (const lvl of levels) {
             const fileInput = document.getElementById(`input-brosur-${lvl}`);
             if (fileInput && fileInput.files[0]) {
                 const file = fileInput.files[0];
-                const fileName = `brosur_${lvl}_${Date.now()}_${file.name}`;
-                const { error: uploadError } = await supabase.storage.from('brosur').upload(fileName, file);
-                if (uploadError) throw uploadError;
+                const fileName = `brosur_${lvl}_${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+                
+                const { error: uploadError } = await supabase.storage
+                    .from('brosur')
+                    .upload(fileName, file, { upsert: true });
 
-                const { data: publicUrlData } = supabase.storage.from('brosur').getPublicUrl(fileName);
+                if (uploadError) throw new Error(`Gagal upload brosur ${lvl}: ` + uploadError.message);
+
+                const { data: publicUrlData } = supabase.storage
+                    .from('brosur')
+                    .getPublicUrl(fileName);
+                    
                 updatedData[`brochure_${lvl}`] = publicUrlData.publicUrl;
             }
         }
 
-        // Simpan seluruh data teks & link file ke Firestore Database
+        // 3. Simpan seluruh data teks & link URL file Supabase ke Firestore Database
         await setDoc(docRef, updatedData);
         
         // Munculkan Pop-up Sukses
