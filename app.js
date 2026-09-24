@@ -15,36 +15,36 @@ const db = getFirestore(app);
 
 window.addEventListener("DOMContentLoaded", async () => {
     try {
-        const docRef = doc(db, "situs", "pengaturan");
-        const docSnap = await getDoc(docRef);
-        
+        const docSnap = await getDoc(doc(db, "situs", "pengaturan"));
         if (docSnap.exists()) {
             const data = docSnap.data();
             
-            if (data.judul && document.getElementById("text-judul")) {
-                document.getElementById("text-judul").innerText = data.judul;
-            }
-            if (data.tagline && document.getElementById("text-tagline")) {
-                document.getElementById("text-tagline").innerText = data.tagline;
-            }
+            if (document.getElementById("judul-situs")) document.getElementById("judul-situs").innerText = data.judul || "Pendaftaran Sekolah";
+            if (document.getElementById("tagline-situs")) document.getElementById("tagline-situs").innerText = data.tagline || "";
             
-            const btnPendaftaran = document.getElementById("btn-pendaftaran");
+            const btnPendaftaran = document.getElementById("btn-pendaftaran-utama");
             if (btnPendaftaran && data.pendaftaranLink) {
                 btnPendaftaran.href = data.pendaftaranLink;
             }
 
+            // Tampilkan tombol download brosur jika ada linknya di database
             const levels = ["tkq", "ula", "wustho", "ulya"];
             levels.forEach(lvl => {
                 const btnBrosur = document.getElementById(`btn-brosur-${lvl}`);
-                if (btnBrosur) {
-                    if (data[`brochure_${lvl}`]) {
-                        btnBrosur.href = data[`brochure_${lvl}`];
-                        btnBrosur.style.display = "block";
-                    } else {
-                        btnBrosur.style.display = "none";
-                    }
+                if (btnBrosur && data[`brochure_${lvl}`]) {
+                    btnBrosur.href = data[`brochure_${lvl}`];
+                    btnBrosur.style.display = "block";
                 }
             });
+
+            // Sembunyikan teks memuat / tampilkan konten
+            const loadingEl = document.getElementById("loading-container");
+            if (loadingEl) loadingEl.style.display = "none";
+            
+            const contentEl = document.getElementById("content-container");
+            if (contentEl) contentEl.style.display = "block";
+        } else {
+            console.log("Belum ada data pengaturan di Firestore.");
         }
     } catch (err) {
         console.error("Gagal memuat data publik:", err);
