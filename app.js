@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 btnPendaftaran.style.display = "block";
             }
 
-            // Tombol WhatsApp (1 sampai 3)
+            // Tombol WhatsApp
             const waContainer = document.getElementById("whatsapp-container");
             waContainer.innerHTML = "";
             for (let i = 1; i <= 3; i++) {
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }
 
-            // Brosur 4 Tingkatan (TKQ, ULA, WUSTHO, ULYA)
+            // Brosur 4 Tingkatan
             const brochureContainer = document.getElementById("brochure-container");
             brochureContainer.innerHTML = "";
             
@@ -82,8 +82,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
                 brochureContainer.appendChild(a);
             });
+        } else {
+            document.getElementById("display-judul").innerText = "Belum ada data di Firebase";
+            document.getElementById("display-tagline").innerText = "Silakan isi data melalui halaman Admin terlebih dahulu.";
         }
     } catch (err) {
         console.error("Gagal memuat data dari Firebase:", err);
+        document.getElementById("display-judul").innerText = "Gagal Memuat Data";
     }
 });
