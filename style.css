@@ -1,4 +1,4 @@
-/* Reset dan Tata Letak Utama */
+/* Reset dan Tata Letak Halaman Utama */
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f2f5;
@@ -10,131 +10,110 @@ body {
     min-height: 100vh;
 }
 
-/* Kotak Kontainer Admin */
-.admin-container {
+/* Kotak Kontainer Utama (Kartu di Tengah) */
+.container {
     background: #ffffff;
     padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     width: 100%;
-    max-width: 500px;
+    max-width: 450px;
     box-sizing: border-box;
+    text-align: center;
 }
 
-/* Judul dan Teks */
-.admin-container h2 {
-    margin-top: 0;
+/* Logo Sekolah */
+.logo-container img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 15px auto;
+    border: 2px solid #eaeaea;
+}
+
+/* Judul dan Tagline */
+h1 {
+    font-size: 20px;
     color: #1a1a1a;
-    font-size: 24px;
-    text-align: left;
+    margin: 10px 0 5px 0;
 }
 
-.subtitle {
+.tagline {
     font-size: 13px;
     color: #666;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
-.section-title {
-    font-weight: bold;
-    color: #333;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    font-size: 15px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 5px;
-}
-
-/* Grup Form */
-.form-group {
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group label {
-    font-size: 13px;
-    font-weight: 600;
-    color: #444;
-    margin-bottom: 5px;
-}
-
-.form-group input[type="text"],
-.form-group input[type="url"],
-.form-group input[type="file"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
+/* Gaya Tombol Umum */
+.btn {
+    display: block;
     width: 100%;
-    box-sizing: border-box;
-}
-
-.form-group input:focus {
-    border-color: #0056b3;
-    outline: none;
-}
-
-/* Tombol Aksi */
-.btn-save {
-    background-color: #1b3b6f;
-    color: white;
-    border: none;
-    padding: 12px;
-    width: 100%;
-    border-radius: 6px;
+    padding: 14px 20px;
+    margin-bottom: 12px;
+    border-radius: 8px;
     font-weight: bold;
     font-size: 14px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background 0.2s;
-}
-
-.btn-save:hover {
-    background-color: #12284d;
-}
-
-.btn-default {
-    background-color: #e2e8f0;
-    color: #333;
-    border: none;
-    padding: 12px;
-    width: 100%;
-    border-radius: 6px;
-    font-weight: bold;
-    font-size: 14px;
-    cursor: pointer;
-    margin-top: 8px;
-    transition: background 0.2s;
-}
-
-.btn-default:hover {
-    background-color: #cbd5e1;
-}
-
-/* Info Box & Link Bawah */
-.info-box {
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
-    padding: 12px;
-    border-radius: 6px;
-    font-size: 11px;
-    color: #64748b;
-    margin-top: 20px;
-    line-height: 1.4;
-}
-
-.back-link {
-    margin-top: 15px;
-    text-align: left;
-}
-
-.back-link a {
-    color: #0056b3;
     text-decoration: none;
-    font-size: 13px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    text-align: center;
 }
 
-.back-link a:hover {
+/* Tombol Utama (Website Pendaftaran - Warna Emas/Kuning) */
+.btn-primary {
+    background-color: #d4af37;
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #c19b2e;
+}
+
+/* Tombol WhatsApp (Warna Hijau) */
+.btn-whatsapp {
+    background-color: #198754;
+    color: white;
+}
+.btn-whatsapp:hover {
+    background-color: #157347;
+}
+
+/* Tombol Brosur (Warna Biru Tua) */
+.btn-brochure {
+    background-color: #0f2c59;
+    color: white;
+}
+.btn-brochure:hover {
+    background-color: #0b2042;
+}
+
+/* Tombol Jika Belum Aktif/Tersedia */
+.btn-disabled {
+    background-color: #e2e8f0;
+    color: #888;
+    cursor: not-allowed;
+}
+
+/* Bagian Seksi Brosur */
+.brochure-section h3 {
+    font-size: 15px;
+    color: #333;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+/* Tombol Menuju Admin di Bawah */
+.admin-link-container {
+    margin-top: 25px;
+}
+
+.admin-link-container a {
+    font-size: 12px;
+    color: #888;
+    text-decoration: none;
+}
+.admin-link-container a:hover {
     text-decoration: underline;
 }
