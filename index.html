@@ -16,7 +16,7 @@
         }
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #3b82f6 100%);
             color: #1e293b;
             min-height: 100vh;
             display: flex;
@@ -27,42 +27,42 @@
         .container {
             width: 100%;
             max-width: 480px;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             margin: auto;
-            padding: 35px 25px;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.05);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 40px 25px;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
             text-align: center;
         }
         
-        /* Logo Styling - Diperbesar & Lebih Modern */
+        /* Logo Styling - Besar & Elegan */
         #logo-container {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             display: none;
         }
         #display-logo {
-            width: 110px;
-            height: 110px;
+            width: 120px;
+            height: 120px;
             object-fit: contain;
             border-radius: 50%;
-            padding: 4px;
+            padding: 6px;
             background: #ffffff;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-            border: 2px solid #f1f5f9;
+            box-shadow: 0 10px 25px rgba(30, 58, 138, 0.15);
+            border: 3px solid #e0f2fe;
             transition: transform 0.3s ease;
         }
         #display-logo:hover {
-            transform: scale(1.03);
+            transform: scale(1.05);
         }
 
-        /* Judul & Tagline */
+        /* Judul & Tagline: Pemisahan Baris Otomatis */
         #display-judul {
-            font-size: 20px;
+            font-size: 21px;
             font-weight: 800;
             margin-bottom: 8px;
             color: #0f172a;
-            line-height: 1.4;
+            line-height: 1.35;
             letter-spacing: -0.02em;
         }
         #display-tagline {
@@ -70,39 +70,53 @@
             color: #64748b;
             margin-bottom: 30px;
             line-height: 1.5;
-            font-weight: 500;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        /* Label Section */
+        /* Section Label */
         .section-label {
             font-weight: 700;
             font-size: 11px;
-            color: #94a3b8;
+            color: #64748b;
             margin-bottom: 12px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .section-label::before, .section-label::after {
+            content: "";
+            height: 1px;
+            flex: 1;
+            background: #e2e8f0;
+            max-width: 40px;
         }
 
-        /* Link Pendaftaran Utama */
+        /* Website Pendaftaran Online */
         .link-section {
             margin-bottom: 25px;
         }
         #link-pendaftaran {
             display: none;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
             color: white;
-            padding: 14px 20px;
-            border-radius: 12px;
+            padding: 15px 20px;
+            border-radius: 14px;
             text-decoration: none;
             font-weight: 700;
             width: 100%;
-            font-size: 14px;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
-            transition: all 0.2s ease;
+            font-size: 15px;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+            transition: all 0.25s ease;
         }
         #link-pendaftaran:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.25);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.45);
+            filter: brightness(1.05);
         }
 
         /* WhatsApp Section */
@@ -111,21 +125,25 @@
             margin-bottom: 25px;
         }
         #whatsapp-container a {
-            display: block;
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
             color: white;
-            padding: 13px 16px;
-            border-radius: 12px;
+            padding: 14px 18px;
+            border-radius: 14px;
             text-decoration: none;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-size: 14px;
-            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
-            transition: all 0.2s ease;
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3);
+            transition: all 0.25s ease;
         }
         #whatsapp-container a:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(34, 197, 94, 0.3);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+            filter: brightness(1.05);
         }
 
         /* Brosur Section */
@@ -136,18 +154,19 @@
             display: block;
             background-color: #f8fafc;
             color: #334155;
-            border: 1px solid #e2e8f0;
-            padding: 13px 16px;
-            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            padding: 14px 18px;
+            border-radius: 14px;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 10px;
             font-size: 14px;
             transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
         }
         #brochure-container a:hover {
             background-color: #f1f5f9;
-            border-color: #cbd5e1;
+            border-color: #94a3b8;
             color: #0f172a;
             transform: translateY(-1px);
         }
@@ -163,11 +182,11 @@
 
         <!-- Judul & Tagline -->
         <h1 id="display-judul">Memuat...</h1>
-        <p id="display-tagline">Informasi Pendaftaran dan Brosur Resmi</p>
+        <p id="display-tagline">Link Pendaftaran & Info Pendaftaran</p>
 
         <!-- Website Pendaftaran Online -->
         <div class="link-section">
-            <a id="link-pendaftaran" href="#" target="_blank">Website Pendaftaran Online</a>
+            <a id="link-pendaftaran" href="#" target="_blank">✨ Website Pendaftaran Online</a>
         </div>
 
         <!-- Tombol WhatsApp (Kontak Person) -->
@@ -183,7 +202,24 @@
         </div>
     </div>
 
-    <!-- Script Utama (Tidak Berubah) -->
-    <script type="module" src="app.js?v=303"></script>
+    <!-- Script Utama (Tidak Berubah & Aman) -->
+    <script type="module" src="app.js?v=304"></script>
+
+    <script>
+        // Script kecil untuk otomatis memecah Judul menjadi 2 baris sesuai permintaan Anda
+        // Baris 1: TKQ Luqmanul Hakim | Baris 2: Ponpes Luqmanul Hakim Medan
+        const observer = new MutationObserver(() => {
+            const judulEl = document.getElementById("display-judul");
+            if (judulEl && judulEl.innerText && !judulEl.innerText.includes("<br>") && judulEl.innerText !== "Memuat...") {
+                let text = judulEl.innerText.toUpperCase();
+                // Jika teks mengandung kata kunci, rapikan format barisnya
+                if (text.includes("PONPES")) {
+                    text = text.replace("PONPES", "<br><span style='font-size: 17px; font-weight: 700; color: #2563eb;'>PONPES</span>");
+                    judulEl.innerHTML = text;
+                }
+            }
+        });
+        observer.observe(document.getElementById("display-judul"), { childList: true, characterData: true, subtree: true });
+    </script>
 </body>
 </html>
