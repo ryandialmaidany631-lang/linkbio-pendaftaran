@@ -1,7 +1,6 @@
 document.getElementById("form-admin").addEventListener("submit", (e) => {
     e.preventDefault();
 
-    // 1. Simpan Teks Utama (Judul, Tagline, Pendaftaran)
     const judul = document.getElementById("input-judul").value;
     const tagline = document.getElementById("input-tagline").value;
     const pendaftaran = document.getElementById("input-pendaftaran").value;
@@ -10,7 +9,6 @@ document.getElementById("form-admin").addEventListener("submit", (e) => {
     if (tagline) localStorage.setItem("schoolTagline", tagline);
     if (pendaftaran) localStorage.setItem("pendaftaranLink", pendaftaran);
 
-    // 2. Simpan 3 Nomor WhatsApp & Namanya
     for (let i = 1; i <= 3; i++) {
         const nameVal = document.getElementById(`wa-name-${i}`).value;
         const numVal = document.getElementById(`wa-number-${i}`).value;
@@ -19,7 +17,6 @@ document.getElementById("form-admin").addEventListener("submit", (e) => {
         localStorage.setItem(`waNumber${i}`, numVal);
     }
 
-    // 3. Kumpulan File yang Akan Diproses (Logo & 4 Brosur)
     const logoFile = document.getElementById("input-logo").files[0];
     const filesToProcess = [
         { key: "logo", file: logoFile, storageKey: "schoolLogo" },
@@ -34,13 +31,13 @@ document.getElementById("form-admin").addEventListener("submit", (e) => {
 
     function checkFinished() {
         if (processedCount >= totalFiles) {
-            alert("Data, Logo, 3 Kontak WhatsApp, dan Brosur 4 Tingkatan berhasil disimpan!");
+            alert("Data berhasil disimpan!");
             location.reload();
         }
     }
 
     if (totalFiles === 0) {
-        alert("Data teks dan kontak WhatsApp berhasil disimpan!");
+        alert("Data berhasil disimpan!");
         location.reload();
     } else {
         filesToProcess.forEach(item => {
@@ -57,5 +54,13 @@ document.getElementById("form-admin").addEventListener("submit", (e) => {
                 reader.readAsDataURL(item.file);
             }
         });
+    }
+});
+
+document.getElementById("btn-default").addEventListener("click", () => {
+    if (confirm("Kembalikan pengaturan ke awal?")) {
+        localStorage.clear();
+        alert("Pengaturan dikembalikan ke default.");
+        location.reload();
     }
 });
