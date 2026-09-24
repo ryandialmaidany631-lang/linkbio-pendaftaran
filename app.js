@@ -14,20 +14,19 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 window.addEventListener("DOMContentLoaded", async () => {
+    // Paksa hilangkan loading terlebih dahulu agar halaman tidak pernah stuck
+    const loadingEl = document.getElementById("loading-container");
+    if (loadingEl) loadingEl.style.display = "none";
+    
+    const contentEl = document.getElementById("content-container");
+    if (contentEl) contentEl.style.display = "block";
+
     try {
         const docSnap = await getDoc(doc(db, "situs", "pengaturan"));
-        
-        // Sembunyikan loading apapun yang terjadi agar halaman tidak stuck
-        const loadingEl = document.getElementById("loading-container");
-        if (loadingEl) loadingEl.style.display = "none";
-        
-        const contentEl = document.getElementById("content-container");
-        if (contentEl) contentEl.style.display = "block";
-
         if (docSnap.exists()) {
             const data = docSnap.data();
             
-            if (document.getElementById("judul-situs")) document.getElementById("judul-situs".innerText = data.judul || "Pendaftaran Sekolah");
+            if (document.getElementById("judul-situs")) document.getElementById("judul-situs").innerText = data.judul || "Pendaftaran Sekolah";
             if (document.getElementById("tagline-situs")) document.getElementById("tagline-situs").innerText = data.tagline || "";
             
             const btnPendaftaran = document.getElementById("btn-pendaftaran-utama");
@@ -46,10 +45,5 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
     } catch (err) {
         console.error("Gagal memuat data publik:", err);
-        // Tetap hilangkan loading jika terjadi error agar halaman bisa diakses
-        const loadingEl = document.getElementById("loading-container");
-        if (loadingEl) loadingEl.style.display = "none";
-        const contentEl = document.getElementById("content-container");
-        if (contentEl) contentEl.style.display = "block";
     }
 });
