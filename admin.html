@@ -3,39 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Cache-Control meta untuk mencegah browser menyimpan cache lama secara berlebihan -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>Pendaftaran & Informasi Sekolah</title>
+    <title>Admin Link Bio</title>
     <link rel="stylesheet" href="style.css?v=300">
 </head>
 <body>
-    <div class="container">
-        <!-- Logo Sekolah -->
-        <div class="logo-container" id="logo-box" style="display: none;">
-            <img id="display-logo" src="" alt="Logo Sekolah">
-        </div>
+    <div class="admin-container">
+        <h2>Admin Link Bio</h2>
+        <p class="subtitle">Panel Pengaturan Online (Terhubung ke Firebase)</p>
+        
+        <form id="form-admin">
+            <div class="form-group">
+                <label>Nama sekolah</label>
+                <input type="text" id="input-judul" placeholder="Masukkan nama sekolah">
+            </div>
 
-        <h1 id="display-judul">Memuat...</h1>
-        <p id="display-tagline" class="tagline">Informasi Pendaftaran dan Brosur Resmi</p>
+            <div class="form-group">
+                <label>Tagline</label>
+                <input type="text" id="input-tagline" placeholder="Masukkan tagline sekolah">
+            </div>
 
-        <!-- Website Pendaftaran -->
-        <div class="link-section">
-            <a id="link-pendaftaran" href="#" target="_blank" class="btn btn-primary" style="display:none;">Website Pendaftaran Online</a>
-        </div>
+            <div class="form-group">
+                <label>Upload Logo Sekolah</label>
+                <input type="file" id="input-logo" accept="image/*">
+            </div>
 
-        <!-- Tombol WhatsApp -->
-        <div class="whatsapp-section" id="whatsapp-container"></div>
+            <div class="section-title">Link utama</div>
+            
+            <div class="form-group">
+                <label>Website Pendaftaran</label>
+                <input type="url" id="input-pendaftaran" placeholder="https://...">
+            </div>
 
-        <!-- Brosur 4 Tingkatan -->
-        <div class="brochure-section">
-            <div class="section-title" style="border:none; text-align:center; margin-bottom:12px;">Download Brosur Pendaftaran</div>
-            <div id="brochure-container"></div>
+            <div class="form-group">
+                <label>WhatsApp Admin 1 (Nama & Nomor)</label>
+                <input type="text" id="wa-name-1" placeholder="Nama Admin 1 (Contoh: Ustadz Jimmy)" style="margin-bottom: 5px;">
+                <input type="text" id="wa-number-1" placeholder="Nomor WA (Contoh: 628123456789)">
+            </div>
+
+            <div class="form-group">
+                <label>WhatsApp Admin 2 (Nama & Nomor)</label>
+                <input type="text" id="wa-name-2" placeholder="Nama Admin 2" style="margin-bottom: 5px;">
+                <input type="text" id="wa-number-2" placeholder="Nomor WA">
+            </div>
+
+            <div class="form-group">
+                <label>WhatsApp Admin 3 (Nama & Nomor)</label>
+                <input type="text" id="wa-name-3" placeholder="Nama Admin 3" style="margin-bottom: 5px;">
+                <input type="text" id="wa-number-3" placeholder="Nomor WA">
+            </div>
+
+            <div class="section-title">Upload Brosur per Tingkatan (PDF/Gambar)</div>
+            <div class="form-group">
+                <label>Brosur TKQ</label>
+                <input type="file" id="input-brosur-tkq" accept=".pdf,image/*">
+            </div>
+            <div class="form-group">
+                <label>Brosur ULA (SD)</label>
+                <input type="file" id="input-brosur-ula" accept=".pdf,image/*">
+            </div>
+            <div class="form-group">
+                <label>Brosur WUSTHO (SMP)</label>
+                <input type="file" id="input-brosur-wustho" accept=".pdf,image/*">
+            </div>
+            <div class="form-group">
+                <label>Brosur ULYA (SMA)</label>
+                <input type="file" id="input-brosur-ulya" accept=".pdf,image/*">
+            </div>
+
+            <button type="submit" class="btn-save">SIMPAN PERUBAHAN</button>
+        </form>
+
+        <div class="back-link">
+            <a href="index.html">← Kembali ke halaman publik</a>
         </div>
     </div>
 
-    <!-- Firebase SDK & Script Utama -->
-    <script type="module" src="app.js?v=300"></script>
+    <script type="module" src="admin.js?v=300"></script>
 </body>
 </html>
