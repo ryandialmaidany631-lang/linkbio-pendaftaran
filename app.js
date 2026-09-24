@@ -20,39 +20,49 @@ window.addEventListener("DOMContentLoaded", async () => {
         if (docSnap.exists()) {
             const data = docSnap.data();
             
-            // Ubah teks "Memuat..." pada ID display-judul menjadi data asli dari Firestore
+            // 1. Tampilkan Judul & Tagline
             const judulEl = document.getElementById("display-judul");
-            if (judulEl) {
-                judulEl.innerText = data.judul || "Pendaftaran Sekolah";
-            }
+            if (judulEl) judulEl.innerText = data.judul || "Pendaftaran Sekolah";
             
             const taglineEl = document.getElementById("display-tagline");
-            if (taglineEl && data.tagline) {
-                taglineEl.innerText = data.tagline;
-            }
+            if (taglineEl) taglineEl.innerText = data.tagline || "Informasi Pendaftaran dan Brosur Resmi";
             
-            // Tampilkan tombol website pendaftaran jika ada linknya
+            // 2. Tampilkan Logo jika ada di database
+            const logoBox = document.getElementById("logo-box");
+            const displayLogo = document.getElementById("display-logo");
+            if (data.logoUrl && logoBox && displayLogo) {
+                displayLogo.src = data.logoUrl;
+                logoBox.style.display = "block";
+            }
+
+            // 3. Website Pendaftaran Utama
             const linkPendaftaran = document.getElementById("link-pendaftaran");
             if (linkPendaftaran && data.pendaftaranLink) {
                 linkPendaftaran.href = data.pendaftaranLink;
                 linkPendaftaran.style.display = "block";
             }
 
-            // Tampilkan tombol WhatsApp jika ada
+            // 4. Tombol WhatsApp dengan Judul Bagian Kontak
             const waContainer = document.getElementById("whatsapp-container");
             if (waContainer) {
-                let waHtml = "";
+                let hasWa = false;
+                let waHtml = `<div class="section-title" style="border:none; text-align:center; margin: 20px 0 10px 0; font-weight: bold; font-size: 14px; color: #555;">Kontak Informasi & Pendaftaran</div>`;
+                
                 for (let i = 1; i <= 3; i++) {
                     const name = data[`waName${i}`];
                     const num = data[`waNumber${i}`];
                     if (name && num) {
+                        hasWa = true;
                         waHtml += `<a href="https://wa.me/${num}" target="_blank" class="btn btn-whatsapp" style="display:block; margin-bottom:10px;">${name}</a>`;
                     }
                 }
-                waContainer.innerHTML = waHtml;
+                
+                if (hasWa) {
+                    waContainer.innerHTML = waHtml;
+                }
             }
 
-            // Tampilkan brosur per tingkatan jika ada
+            // 5. Brosur per Tingkatan
             const brochureContainer = document.getElementById("brochure-container");
             if (brochureContainer) {
                 const levels = [
@@ -73,13 +83,10 @@ window.addEventListener("DOMContentLoaded", async () => {
             }
 
         } else {
-            // Jika data kosong di database, ubah tulisan memuat agar tidak membingungkan
             const judulEl = document.getElementById("display-judul");
             if (judulEl) judulEl.innerText = "Pendaftaran Sekolah";
         }
     } catch (err) {
         console.error("Gagal memuat data publik:", err);
-        const judulEl = document.getElementById("display-judul");
-        if (judulEl) judulEl.innerText = "Pendaftaran Sekolah";
     }
 });
