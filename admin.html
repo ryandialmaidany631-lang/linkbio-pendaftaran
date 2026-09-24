@@ -3,86 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Link Bio</title>
+    <title>Pendaftaran & Informasi Sekolah</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="admin-container">
-        <h2>Admin Link Bio</h2>
-        <p class="subtitle">Mode prototype: perubahan disimpan di browser ini.</p>
-        
-        <form id="form-admin">
-            <div class="form-group">
-                <label>Nama sekolah</label>
-                <input type="text" id="input-judul" placeholder="Masukkan nama sekolah">
-            </div>
-
-            <div class="form-group">
-                <label>Tagline</label>
-                <input type="text" id="input-tagline" placeholder="Masukkan tagline sekolah">
-            </div>
-
-            <div class="form-group">
-                <label>Upload Logo Sekolah</label>
-                <input type="file" id="input-logo" accept="image/*">
-            </div>
-
-            <div class="section-title">Link utama</div>
-            
-            <div class="form-group">
-                <label>Website Pendaftaran</label>
-                <input type="url" id="input-pendaftaran" placeholder="https://...">
-            </div>
-
-            <div class="form-group">
-                <label>WhatsApp Admin 1 (Nama & Nomor)</label>
-                <input type="text" id="wa-name-1" placeholder="Nama Admin 1 (Contoh: Pak Budi)" style="margin-bottom: 5px;">
-                <input type="text" id="wa-number-1" placeholder="Nomor WA (Contoh: 628123456789)">
-            </div>
-
-            <div class="form-group">
-                <label>WhatsApp Admin 2 (Nama & Nomor)</label>
-                <input type="text" id="wa-name-2" placeholder="Nama Admin 2 (Contoh: Bu Siti)" style="margin-bottom: 5px;">
-                <input type="text" id="wa-number-2" placeholder="Nomor WA (Contoh: 628987654321)">
-            </div>
-
-            <div class="form-group">
-                <label>WhatsApp Admin 3 (Nama & Nomor)</label>
-                <input type="text" id="wa-name-3" placeholder="Nama Admin 3 (Contoh: Panitia)" style="margin-bottom: 5px;">
-                <input type="text" id="wa-number-3" placeholder="Nomor WA (Contoh: 628112233445)">
-            </div>
-
-            <div class="section-title">Upload Brosur per Tingkatan</div>
-            <div class="form-group">
-                <label>Brosur TKQ</label>
-                <input type="file" id="input-brosur-tkq" accept=".pdf,image/*">
-            </div>
-            <div class="form-group">
-                <label>Brosur ULA (SD)</label>
-                <input type="file" id="input-brosur-ula" accept=".pdf,image/*">
-            </div>
-            <div class="form-group">
-                <label>Brosur WUSTHO (SMP)</label>
-                <input type="file" id="input-brosur-wustho" accept=".pdf,image/*">
-            </div>
-            <div class="form-group">
-                <label>Brosur ULYA (SMA)</label>
-                <input type="file" id="input-brosur-ulya" accept=".pdf,image/*">
-            </div>
-
-            <button type="submit" class="btn-save">SIMPAN PERUBAHAN</button>
-            <button type="button" id="btn-default" class="btn-default">KEMBALIKAN DEFAULT</button>
-        </form>
-
-        <div class="info-box">
-            Untuk versi online yang benar-benar bisa mengubah link dan upload PDF dari HP, kita perlu menghubungkan halaman ini ke database/storage gratis (misalnya Supabase/Firebase). GitHub Pages sendiri hanya menyajikan file HTML/CSS/JS dan tidak menjalankan PHP/server-side code.
+    <div class="container">
+        <div class="logo-container">
+            <img id="display-logo" src="" alt="Logo Sekolah" style="display: none;">
         </div>
 
-        <div class="back-link">
-            <a href="index.html">← Lihat halaman publik</a>
+        <h1 id="display-judul">Nama Sekolah</h1>
+        <p id="display-tagline" class="tagline">Informasi Pendaftaran dan Brosur Resmi</p>
+
+        <div class="link-section">
+            <a id="link-pendaftaran" href="#" target="_blank" class="btn btn-primary">Website Pendaftaran Online</a>
+        </div>
+
+        <div class="whatsapp-section" id="whatsapp-container"></div>
+
+        <div class="brochure-section">
+            <div class="section-title" style="border:none; text-align:center; margin-bottom:12px;">Download Brosur Pendaftaran</div>
+            <div id="brochure-container"></div>
         </div>
     </div>
 
-    <script src="admin.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
