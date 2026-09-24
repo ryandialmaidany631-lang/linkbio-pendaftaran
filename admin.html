@@ -1,12 +1,30 @@
-<!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin • Link Bio</title><link rel="stylesheet" href="style.css"></head>
-<body><main class="wrap"><section class="card admin">
-<h1>Admin Link Bio</h1><p class="muted">Mode prototype: perubahan disimpan di browser ini.</p>
-<label>Nama sekolah<input id="schoolName"></label><label>Tagline<input id="tagline"></label>
-<h2>Link utama</h2><label>Website Pendaftaran<input id="website"></label><label>WhatsApp Admin<input id="whatsapp"></label>
-<h2>Menu Brosur</h2><div id="brochures"></div>
-<button class="save" onclick="save()">SIMPAN PERUBAHAN</button><button class="reset" onclick="resetData()">KEMBALIKAN DEFAULT</button>
-<p class="note">Untuk versi online yang benar-benar bisa mengubah link dan upload PDF dari HP, kita perlu menghubungkan halaman ini ke database/storage gratis (misalnya Supabase/Firebase). GitHub Pages sendiri hanya menyajikan file HTML/CSS/JS dan tidak menjalankan PHP/server-side code.</p>
-<a href="index.html">← Lihat halaman publik</a>
-</section></main><script src="config.js"></script><script src="admin.js"></script></body></html>
+<!-- Tambahkan di dalam form admin Anda -->
+<div class="form-group">
+    <label>Nama/Judul Sekolah:</label>
+    <input type="text" id="input-judul" placeholder="Contoh: SMA Negeri 1 Medan">
+</div>
+
+<div class="form-group">
+    <label>Upload Logo Sekolah:</label>
+    <input type="file" id="input-logo" accept="image/*">
+</div>
+
+<hr>
+<h3>Kontak Person WhatsApp (Maksimal 3 Nomor)</h3>
+<div class="form-group">
+    <label>WhatsApp 1 (Nama & Nomor):</label>
+    <input type="text" id="wa-name-1" placeholder="Contoh: Admin 1 (Pak Budi)">
+    <input type="text" id="wa-number-1" placeholder="Contoh: 6281234567890">
+</div>
+
+<div class="form-group">
+    <label>WhatsApp 2 (Nama & Nomor):</label>
+    <input type="text" id="wa-name-2" placeholder="Contoh: Admin 2 (Bu Siti)">
+    <input type="text" id="wa-number-2" placeholder="Contoh: 6289876543210">
+</div>
+
+<div class="form-group">
+    <label>WhatsApp 3 (Nama & Nomor):</label>
+    <input type="text" id="wa-name-3" placeholder="Contoh: Admin 3 (Panitia)">
+    <input type="text" id="wa-number-3" placeholder="Contoh: 6281122334455">
+</div>
