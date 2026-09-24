@@ -14,12 +14,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Kunci Supabase menggunakan Legacy Anon Key yang Anda berikan
 const SUPABASE_URL = 'https://wnstuvnvrfiqmohtkfme.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Induc3R1dm52cmZpcW1vaHRrZm1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyMTE1MzksImV4cCI6MjEwNTc4NzUzOX0.AY-gLTVCQVqu3skr0feamHZRt7-Lob8ls3Ab7SDTVxM'; 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Muat data lama ke form admin saat dibuka
+// Muat data lama ke form admin saat halaman dibuka
 window.addEventListener("DOMContentLoaded", async () => {
     try {
         const docSnap = await getDoc(doc(db, "situs", "pengaturan"));
@@ -31,7 +30,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             
             for (let i = 1; i <= 3; i++) {
                 if (data[`waName${i}`]) document.getElementById(`wa-name-${i}`).value = data[`waName${i}`];
-                if (data[`waNumber${i}`]) document.getElementById(`wa-number-${i}`).value = data[`waNumber${i}`];
+                if (data[`waNumber${i}`]) document.getElementById(`wa-number-${i}`].value = data[`waNumber${i}`];
             }
         }
     } catch (err) {
@@ -59,35 +58,37 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             pendaftaranLink: document.getElementById("input-pendaftaran") ? document.getElementById("input-pendaftaran").value : "",
         };
 
-        // Upload Brosur per Tingkatan ke Supabase Storage
         const levels = ["tkq", "ula", "wustho", "ulya"];
         for (const lvl of levels) {
             const fileInput = document.getElementById(`input-brosur-${lvl}`);
             if (fileInput && fileInput.files[0]) {
                 const file = fileInput.files[0];
-                const cleanName = file.name.replace(/[^a-zA-Z0-9_.-]/g, '_');
-                const fileName = `brosur_${lvl}_${Date.now()}_${cleanName}`;
+                // Bersihkan nama file dari spasi dan karakter khusus agar aman di URL storage
+                const cleanFileName = file.name.replace(/[^a-zA-Z0-9_.-]/g, '_');
+                const filePath = `brosur_${lvl}_${Date.now()}_${cleanFileName}`;
                 
+                // Upload ke Supabase Storage bucket 'brosur'
                 const { error: uploadError } = await supabase.storage
                     .from('brosur')
-                    .upload(fileName, file, { 
+                    .upload(filePath, file, {
                         cacheControl: '3600',
-                        upsert: true 
+                        upsert: true
                     });
 
                 if (uploadError) {
                     throw new Error(`Gagal upload brosur ${lvl}: ` + uploadError.message);
                 }
 
+                // Ambil Public URL dari file yang baru di-upload
                 const { data: publicUrlData } = supabase.storage
                     .from('brosur')
-                    .getPublicUrl(fileName);
-                    
+                    .getPublicUrl(filePath);
+
                 updatedData[`brochure_${lvl}`] = publicUrlData.publicUrl;
             }
         }
 
-        // Simpan data teks & URL Supabase ke Firestore Database
+        // Simpan data teks dan link URL brosur ke Firestore
         await setDoc(docRef, updatedData);
         
         saveBtn.innerText = "SIMPAN PERUBAHAN";
@@ -98,7 +99,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
         if (modal) {
             modal.style.display = "flex";
         } else {
-            alert("Brosur berhasil di-upload dan disimpan!");
+            alert("Perubahan dan brosur berhasil disimpan!");
             location.reload();
         }
 
@@ -110,7 +111,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
     }
 });
 
-// Tombol OK pada Pop-up
+// Tombol OK pada Pop-up Sukses
 const okBtn = document.getElementById("modal-ok-btn");
 if (okBtn) {
     okBtn.addEventListener("click", () => {
