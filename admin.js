@@ -14,32 +14,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// KONFIGURASI SUPABASE
+// KONFIGURASI SUPABASE (Pastikan URL dan Anon Key Anda benar)
 const SUPABASE_URL = 'https://wnstuvnvrfiqmohtkfme.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Induc3R1dm52cmZpcW1vaHRrZm1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEyMzg2ODksImV4cCI6MjA1NjgxNDY4OX0.ContohKunciPanjangAndaDiSini'; // <-- Pastikan Anon Key Anda terisi lengkap di sini
+const SUPABASE_KEY = 'MASUKKAN_ANON_KEY_ANDA_DISINI'; 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Muat data lama ke form admin saat dibuka
-window.addEventListener("DOMContentLoaded", async () => {
-    try {
-        const docSnap = await getDoc(doc(db, "situs", "pengaturan"));
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            if (data.judul) document.getElementById("input-judul").value = data.judul;
-            if (data.tagline) document.getElementById("input-tagline").value = data.tagline;
-            if (data.pendaftaranLink) document.getElementById("input-pendaftaran").value = data.pendaftaranLink;
-            
-            for (let i = 1; i <= 3; i++) {
-                if (data[`waName${i}`]) document.getElementById(`wa-name-${i}`).value = data[`waName${i}`];
-                if (data[`waNumber${i}`]) document.getElementById(`wa-number-${i}`).value = data[`waNumber${i}`];
-            }
-        }
-    } catch (err) {
-        console.error("Gagal memuat form admin:", err);
-    }
-});
+// Nama bucket di Supabase (Pastikan huruf kecil semua dan sama persis dengan di dashboard)
+const BUCKET_NAME = 'brosur';
 
-// Proses Simpan & Upload
 document.getElementById("form-admin").addEventListener("submit", async (e) => {
     e.preventDefault();
     
@@ -54,26 +36,12 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
 
         let updatedData = {
             ...existingData,
-            judul: document.getElementById("input-judul").value,
-            tagline: document.getElementById("input-tagline").value,
-            pendaftaranLink: document.getElementById("input-pendaftaran").value,
-            waName1: document.getElementById("input-wa-name-1") ? document.getElementById("input-wa-name-1").value : (existingData.waName1 || ""),
-            waNumber1: document.getElementById("input-wa-number-1") ? document.getElementById("input-wa-number-1").value : (existingData.waNumber1 || ""),
+            judul: document.getElementById("input-judul") ? document.getElementById("input-judul").value : "",
+            tagline: document.getElementById("input-tagline") ? document.getElementById("input-tagline").value : "",
+            pendaftaranLink: document.getElementById("input-pendaftaran") ? document.getElementById("input-pendaftaran").value : "",
         };
 
-        // Upload Logo (jika ada)
-        const logoInput = document.getElementById("input-logo");
-        if (logoInput && logoInput.files[0]) {
-            const logoFile = logoInput.files[0];
-            const logoName = 'logo_' + Date.now() + '_' + logoFile.name.replace(/\s+/g, '_');
-            const { error: logoError } = await supabase.storage.from('brosur').upload(logoName, logoFile, { upsert: true });
-            if (logoError) throw new Error("Gagal upload logo: " + logoError.message);
-
-            const { data: logoUrlData } = supabase.storage.from('brosur').getPublicUrl(logoName);
-            updatedData.logoUrl = logoUrlData.publicUrl;
-        }
-
-        // Upload Brosur per Tingkatan
+        // Upload Brosur per Tingkatan ke Supabase Storage
         const levels = ["tkq", "ula", "wustho", "ulya"];
         for (const lvl of levels) {
             const fileInput = document.getElementById(`input-brosur-${lvl}`);
@@ -81,39 +49,50 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
                 const file = fileInput.files[0];
                 const fileName = `brosur_${lvl}_${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
                 
-                const { error: uploadError } = await supabase.storage.from('brosur').upload(fileName, file, { upsert: true });
-                if (uploadError) throw new Error(`Gagal upload brosur ${lvl}: ` + uploadError.message);
+                // Perintah upload ke Supabase
+                const { data, error: uploadError } = await supabase.storage
+                    .from(BUCKET_NAME)
+                    .upload(fileName, file, { 
+                        cacheControl: '3600',
+                        upsert: true 
+                    });
 
-                const { data: publicUrlData } = supabase.storage.from('brosur').getPublicUrl(fileName);
+                if (uploadError) {
+                    throw new Error(`Gagal upload ${lvl}: ` + uploadError.message);
+                }
+
+                // Ambil Public URL dari file yang di-upload
+                const { data: publicUrlData } = supabase.storage
+                    .from(BUCKET_NAME)
+                    .getPublicUrl(fileName);
+                    
                 updatedData[`brochure_${lvl}`] = publicUrlData.publicUrl;
             }
         }
 
-        // Simpan data ke Firestore
+        // Simpan ke Firestore
         await setDoc(docRef, updatedData);
         
-        // Kembalikan tombol ke semula
         saveBtn.innerText = "SIMPAN PERUBAHAN";
         saveBtn.disabled = false;
 
-        // Munculkan Pop-up Sukses secara paksa
+        // Munculkan Pop-up Sukses
         const modal = document.getElementById("success-modal");
         if (modal) {
             modal.style.display = "flex";
         } else {
-            alert("Perubahan dan brosur berhasil disimpan!");
+            alert("Brosur berhasil di-upload dan disimpan!");
             location.reload();
         }
 
     } catch (err) {
-        console.error("Error:", err);
+        console.error("Error Detail:", err);
         alert("Terjadi kesalahan: " + err.message);
         saveBtn.innerText = "SIMPAN PERUBAHAN";
         saveBtn.disabled = false;
     }
 });
 
-// Tombol OK pada Pop-up
 const okBtn = document.getElementById("modal-ok-btn");
 if (okBtn) {
     okBtn.addEventListener("click", () => {
