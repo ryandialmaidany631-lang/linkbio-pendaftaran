@@ -21,26 +21,32 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 // Muat data lama ke form admin saat halaman dibuka
 window.addEventListener("DOMContentLoaded", async () => {
     try {
+        console.log("Memuat data dari Firestore...");
         const docSnap = await getDoc(doc(db, "situs", "pengaturan"));
         if (docSnap.exists()) {
             const data = docSnap.data();
-            if (data.judul) document.getElementById("input-judul").value = data.judul;
-            if (data.tagline) document.getElementById("input-tagline").value = data.tagline;
-            if (data.pendaftaranLink) document.getElementById("input-pendaftaran").value = data.pendaftaranLink;
+            console.log("Data ditemukan:", data);
+            
+            if (document.getElementById("input-judul")) document.getElementById("input-judul").value = data.judul || "";
+            if (document.getElementById("input-tagline")) document.getElementById("input-tagline").value = data.tagline || "";
+            if (document.getElementById("input-pendaftaran")) document.getElementById("input-pendaftaran").value = data.pendaftaranLink || "";
             
             for (let i = 1; i <= 3; i++) {
-                if (data[`waName${i}`]) document.getElementById(`wa-name-${i}`).value = data[`waName${i}`];
-                if (data[`waNumber${i}`]) document.getElementById(`wa-number-${i}`).value = data[`waNumber${i}`];
+                if (document.getElementById(`wa-name-${i}`)) document.getElementById(`wa-name-${i}`).value = data[`waName${i}`] || "";
+                if (document.getElementById(`wa-number-${i}`)) document.getElementById(`wa-number-${i}`).value = data[`waNumber${i}`] || "";
             }
+        } else {
+            console.log("Dokumen pengaturan belum ada di Firestore.");
         }
     } catch (err) {
         console.error("Gagal memuat form admin:", err);
     }
 });
 
-// Proses Simpan & Upload Data ke Supabase & Firestore
+// Proses Simpan & Upload Data
 document.getElementById("form-admin").addEventListener("submit", async (e) => {
     e.preventDefault();
+    console.log("Tombol simpan diklik, memulai proses...");
     
     const saveBtn = document.querySelector(".btn-save");
     saveBtn.innerText = "SEDANG MENYIMPAN...";
@@ -53,17 +59,14 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
 
         let updatedData = {
             ...existingData,
-            judul: document.getElementById("input-judul") ? document.getElementById("input-judul").value : "",
-            tagline: document.getElementById("input-tagline") ? document.getElementById("input-tagline").value : "",
-            pendaftaranLink: document.getElementById("input-pendaftaran") ? document.getElementById("input-pendaftaran").value : "",
+            judul: document.getElementById("input-judul")?.value || "",
+            tagline: document.getElementById("input-tagline")?.value || "",
+            pendaftaranLink: document.getElementById("input-pendaftaran")?.value || "",
         };
 
-        // Ambil data inputan WhatsApp 1 sampai 3
         for (let i = 1; i <= 3; i++) {
-            const nameVal = document.getElementById(`wa-name-${i}`)?.value || "";
-            const numVal = document.getElementById(`wa-number-${i}`)?.value || "";
-            updatedData[`waName${i}`] = nameVal;
-            updatedData[`waNumber${i}`] = numVal;
+            updatedData[`waName${i}`] = document.getElementById(`wa-name-${i}`)?.value || "";
+            updatedData[`waNumber${i}`] = document.getElementById(`wa-number-${i}`)?.value || "";
         }
 
         // Upload Brosur per Tingkatan ke Supabase Storage
@@ -72,6 +75,7 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             const fileInput = document.getElementById(`input-brosur-${lvl}`);
             if (fileInput && fileInput.files[0]) {
                 const file = fileInput.files[0];
+                console.log(`Mengupload brosur ${lvl}:`, file.name);
                 const cleanFileName = file.name.replace(/[^a-zA-Z0-9_.-]/g, '_');
                 const filePath = `brosur_${lvl}_${Date.now()}_${cleanFileName}`;
                 
@@ -94,33 +98,20 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             }
         }
 
-        // Simpan ke Firestore
+        console.log("Menyimpan data ke Firestore...", updatedData);
         await setDoc(docRef, updatedData);
+        console.log("Data berhasil disimpan ke Firestore!");
         
         saveBtn.innerText = "SIMPAN PERUBAHAN";
         saveBtn.disabled = false;
 
-        // Munculkan Pop-up Sukses
-        const modal = document.getElementById("success-modal");
-        if (modal) {
-            modal.style.display = "flex";
-        } else {
-            alert("Data dan brosur berhasil disimpan!");
-            location.reload();
-        }
+        alert("Berhasil! Semua data dan brosur telah tersimpan.");
+        location.reload();
 
     } catch (err) {
-        console.error("Error Detail:", err);
+        console.error("TERJADI ERROR DETAIL:", err);
         alert("Terjadi kesalahan: " + err.message);
         saveBtn.innerText = "SIMPAN PERUBAHAN";
         saveBtn.disabled = false;
     }
 });
-
-// Tombol OK pada Pop-up Sukses
-const okBtn = document.getElementById("modal-ok-btn");
-if (okBtn) {
-    okBtn.addEventListener("click", () => {
-        location.reload();
-    });
-}
