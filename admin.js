@@ -18,15 +18,12 @@ const SUPABASE_URL = 'https://wnstuvnvrfiqmohtkfme.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Induc3R1dm52cmZpcW1vaHRrZm1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyMTE1MzksImV4cCI6MjEwNTc4NzUzOX0.AY-gLTVCQVqu3skr0feamHZRt7-Lob8ls3Ab7SDTVxM'; 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Muat data lama ke form admin saat halaman dibuka
-window.addEventListener("DOMContentLoaded", async () => {
+// Fungsi untuk memuat data ke form admin
+async function muatDataAdmin() {
     try {
-        console.log("Memuat data dari Firestore...");
         const docSnap = await getDoc(doc(db, "situs", "pengaturan"));
         if (docSnap.exists()) {
             const data = docSnap.data();
-            console.log("Data ditemukan:", data);
-            
             if (document.getElementById("input-judul")) document.getElementById("input-judul").value = data.judul || "";
             if (document.getElementById("input-tagline")) document.getElementById("input-tagline").value = data.tagline || "";
             if (document.getElementById("input-pendaftaran")) document.getElementById("input-pendaftaran").value = data.pendaftaranLink || "";
@@ -35,18 +32,18 @@ window.addEventListener("DOMContentLoaded", async () => {
                 if (document.getElementById(`wa-name-${i}`)) document.getElementById(`wa-name-${i}`).value = data[`waName${i}`] || "";
                 if (document.getElementById(`wa-number-${i}`)) document.getElementById(`wa-number-${i}`).value = data[`waNumber${i}`] || "";
             }
-        } else {
-            console.log("Dokumen pengaturan belum ada di Firestore.");
         }
     } catch (err) {
         console.error("Gagal memuat form admin:", err);
     }
-});
+}
+
+// Muat data saat halaman pertama kali dibuka
+window.addEventListener("DOMContentLoaded", muatDataAdmin);
 
 // Proses Simpan & Upload Data
 document.getElementById("form-admin").addEventListener("submit", async (e) => {
     e.preventDefault();
-    console.log("Tombol simpan diklik, memulai proses...");
     
     const saveBtn = document.querySelector(".btn-save");
     saveBtn.innerText = "SEDANG MENYIMPAN...";
@@ -75,7 +72,6 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             const fileInput = document.getElementById(`input-brosur-${lvl}`);
             if (fileInput && fileInput.files[0]) {
                 const file = fileInput.files[0];
-                console.log(`Mengupload brosur ${lvl}:`, file.name);
                 const cleanFileName = file.name.replace(/[^a-zA-Z0-9_.-]/g, '_');
                 const filePath = `brosur_${lvl}_${Date.now()}_${cleanFileName}`;
                 
@@ -98,15 +94,22 @@ document.getElementById("form-admin").addEventListener("submit", async (e) => {
             }
         }
 
-        console.log("Menyimpan data ke Firestore...", updatedData);
+        // Simpan data ke Firestore
         await setDoc(docRef, updatedData);
-        console.log("Data berhasil disimpan ke Firestore!");
         
         saveBtn.innerText = "SIMPAN PERUBAHAN";
         saveBtn.disabled = false;
 
-        alert("Berhasil! Semua data dan brosur telah tersimpan.");
-        location.reload();
+        // Kosongkan pilihan file input brosur agar tidak terupload ulang dua kali jika diklik simpan lagi
+        for (const lvl of levels) {
+            const fileInput = document.getElementById(`input-brosur-${lvl}`);
+            if (fileInput) fileInput.value = "";
+        }
+
+        // Muat ulang data terbaru tanpa merefresh halaman agar data tetap ada di form
+        await muatDataAdmin();
+
+        alert("Berhasil! Semua data dan brosur telah tersimpan dan diperbarui.");
 
     } catch (err) {
         console.error("TERJADI ERROR DETAIL:", err);
