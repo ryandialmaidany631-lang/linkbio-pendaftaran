@@ -8,50 +8,83 @@
 </head>
 <body>
 
-    <div class="admin-container">
+    <div class="admin-container" style="max-width: 600px; margin: 30px auto; padding: 20px; font-family: sans-serif;">
         <h2>Panel Admin Pendaftaran</h2>
         
         <form id="form-admin">
-            <div class="form-group">
-                <label for="input-judul">Judul Situs</label>
-                <input type="text" id="input-judul" placeholder="Masukkan judul situs...">
+            <!-- Informasi Utama -->
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label for="input-judul">Judul Situs / Nama Sekolah</label>
+                <input type="text" id="input-judul" style="width: 100%; padding: 8px;" placeholder="Masukkan judul situs...">
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 15px;">
                 <label for="input-tagline">Tagline / Deskripsi Singkat</label>
-                <input type="text" id="input-tagline" placeholder="Masukkan tagline...">
+                <input type="text" id="input-tagline" style="width: 100%; padding: 8px;" placeholder="Masukkan tagline...">
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 15px;">
                 <label for="input-pendaftaran">Link Pendaftaran Utama</label>
-                <input type="url" id="input-pendaftaran" placeholder="https://...">
+                <input type="url" id="input-pendaftaran" style="width: 100%; padding: 8px;" placeholder="https://...">
             </div>
 
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Upload Logo Sekolah</label>
+                <input type="file" id="input-logo" accept="image/*" style="width: 100%; padding: 5px;">
+            </div>
 
+            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #ddd;">
+
+            <!-- Kontak Person WhatsApp -->
+            <h3>Kontak Person (WhatsApp)</h3>
+            
+            <div class="form-group" style="margin-bottom: 10px;">
+                <label>Nama Kontak 1</label>
+                <input type="text" id="wa-name-1" style="width: 100%; padding: 8px;" placeholder="Cth: Ust. Ahmad">
+                <label style="margin-top: 5px; display: block;">Nomor WA 1 (Awali 62...)</label>
+                <input type="text" id="wa-number-1" style="width: 100%; padding: 8px;" placeholder="628123456789">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 10px;">
+                <label>Nama Kontak 2</label>
+                <input type="text" id="wa-name-2" style="width: 100%; padding: 8px;" placeholder="Cth: Ustazah Fatimah">
+                <label style="margin-top: 5px; display: block;">Nomor WA 2</label>
+                <input type="text" id="wa-number-2" style="width: 100%; padding: 8px;" placeholder="628123456789">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Nama Kontak 3</label>
+                <input type="text" id="wa-name-3" style="width: 100%; padding: 8px;" placeholder="Cth: Admin Utama">
+                <label style="margin-top: 5px; display: block;">Nomor WA 3</label>
+                <input type="text" id="wa-number-3" style="width: 100%; padding: 8px;" placeholder="628123456789">
+            </div>
+
+            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #ddd;">
+
+            <!-- Upload Brosur per Tingkatan -->
             <h3>Upload Brosur per Tingkatan (PDF/Gambar)</h3>
             
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 10px;">
                 <label>Brosur TKQ</label>
-                <input type="file" id="input-brosur-tkq" accept=".pdf,image/*">
+                <input type="file" id="input-brosur-tkq" accept=".pdf,image/*" style="width: 100%; padding: 5px;">
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 10px;">
                 <label>Brosur ULA (SD)</label>
-                <input type="file" id="input-brosur-ula" accept=".pdf,image/*">
+                <input type="file" id="input-brosur-ula" accept=".pdf,image/*" style="width: 100%; padding: 5px;">
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 10px;">
                 <label>Brosur WUSTHO (SMP)</label>
-                <input type="file" id="input-brosur-wustho" accept=".pdf,image/*">
+                <input type="file" id="input-brosur-wustho" accept=".pdf,image/*" style="width: 100%; padding: 5px;">
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 15px;">
                 <label>Brosur ULYA (SMA)</label>
-                <input type="file" id="input-brosur-ulya" accept=".pdf,image/*">
+                <input type="file" id="input-brosur-ulya" accept=".pdf,image/*" style="width: 100%; padding: 5px;">
             </div>
 
-            <button type="submit" class="btn-save">SIMPAN PERUBAHAN</button>
+            <button type="submit" class="btn-save" style="width: 100%; padding: 12px; background: #000; color: #fff; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">SIMPAN PERUBAHAN</button>
         </form>
 
         <div style="text-align: center; margin-top: 15px;">
@@ -63,7 +96,7 @@
     <div id="success-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 9999;">
         <div style="background: white; padding: 30px; border-radius: 12px; text-align: center; max-width: 320px; width: 90%; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
             <h3 style="margin-bottom: 10px; color: #333;">Berhasil!</h3>
-            <p style="color: #666; margin-bottom: 20px;">Brosur dan perubahan data berhasil disimpan.</p>
+            <p style="color: #666; margin-bottom: 20px;">Data, kontak, logo, dan brosur berhasil disimpan.</p>
             <button id="modal-ok-btn" style="padding: 10px 25px; background: #111; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">OK</button>
         </div>
     </div>
