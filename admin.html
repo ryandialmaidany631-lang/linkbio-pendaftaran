@@ -1,44 +1,226 @@
-<!-- Upload Brosur per Tingkatan -->
-<div class="brochure-section">
-    <h3>Upload Brosur per Tingkatan (PDF/Gambar)</h3>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Pengaturan Sekolah</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+            color: #334155;
+        }
+        .container {
+            max-width: 600px;
+            background: #ffffff;
+            margin: 0 auto;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-top: 0;
+            color: #1e293b;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .mb-3 {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        input[type="text"], input[type="url"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        input[type="file"] {
+            background: #f8fafc;
+        }
+        .brochure-section {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 25px;
+        }
+        .brochure-section h3 {
+            font-size: 16px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #1e293b;
+        }
+        .btn-save {
+            background: #0f172a;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            margin-top: 15px;
+            transition: background 0.2s;
+        }
+        .btn-save:hover {
+            background: #1e293b;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .status-badge {
+            font-size: 12px;
+            color: #059669;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: none;
+        }
+        .btn-delete-file {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 8px;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
 
-    <!-- Brosur TKQ -->
-    <div class="mb-3">
-        <label>Brosur TKQ</label>
-        <div id="status-brosur-tkq" style="font-size: 12px; color: #059669; font-weight: 600; margin-bottom: 4px; display: none;">
-            ✓ Brosur sudah diupload. 
-            <button type="button" id="btn-hapus-tkq" style="background: #ef4444; color: white; border: none; padding: 2px 8px; border-radius: 4px; cursor: pointer; margin-left: 8px; font-size: 11px;">Hapus / Ganti</button>
-        </div>
-        <input type="file" id="input-brosur-tkq" accept=".pdf, image/*">
-    </div>
+<div class="container">
+    <h2>Dashboard Pengaturan Admin</h2>
 
-    <!-- Brosur ULA -->
-    <div class="mb-3">
-        <label>Brosur ULA (SD)</label>
-        <div id="status-brosur-ula" style="font-size: 12px; color: #059669; font-weight: 600; margin-bottom: 4px; display: none;">
-            ✓ Brosur sudah diupload. 
-            <button type="button" id="btn-hapus-ula" style="background: #ef4444; color: white; border: none; padding: 2px 8px; border-radius: 4px; cursor: pointer; margin-left: 8px; font-size: 11px;">Hapus / Ganti</button>
+    <form id="form-admin">
+        
+        <!-- Upload Logo Sekolah -->
+        <div class="mb-3" style="padding: 15px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <label>Logo Sekolah</label>
+            <div id="status-logo" class="status-badge">
+                ✓ Logo sudah diupload. 
+                <button type="button" id="btn-hapus-logo" class="btn-delete-file">Hapus / Ganti</button>
+            </div>
+            <input type="file" id="input-logo" accept="image/*">
         </div>
-        <input type="file" id="input-brosur-ula" accept=".pdf, image/*">
-    </div>
 
-    <!-- Brosur WUSTHO -->
-    <div class="mb-3">
-        <label>Brosur WUSTHO (SMP)</label>
-        <div id="status-brosur-wustho" style="font-size: 12px; color: #059669; font-weight: 600; margin-bottom: 4px; display: none;">
-            ✓ Brosur sudah diupload. 
-            <button type="button" id="btn-hapus-wustho" style="background: #ef4444; color: white; border: none; padding: 2px 8px; border-radius: 4px; cursor: pointer; margin-left: 8px; font-size: 11px;">Hapus / Ganti</button>
+        <!-- Pengaturan Teks Utama -->
+        <div class="mb-3">
+            <label for="input-judul">Judul Utama / Nama Lembaga</label>
+            <input type="text" id="input-judul" placeholder="Contoh: Yayasan Pendidikan Islam...">
         </div>
-        <input type="file" id="input-brosur-wustho" accept=".pdf, image/*">
-    </div>
 
-    <!-- Brosur ULYA -->
-    <div class="mb-3">
-        <label>Brosur ULYA (SMA)</label>
-        <div id="status-brosur-ulya" style="font-size: 12px; color: #059669; font-weight: 600; margin-bottom: 4px; display: none;">
-            ✓ Brosur sudah diupload. 
-            <button type="button" id="btn-hapus-ulya" style="background: #ef4444; color: white; border: none; padding: 2px 8px; border-radius: 4px; cursor: pointer; margin-left: 8px; font-size: 11px;">Hapus / Ganti</button>
+        <div class="mb-3">
+            <label for="input-tagline">Tagline / Deskripsi Singkat</label>
+            <input type="text" id="input-tagline" placeholder="Contoh: Unggul, Berkarakter, dan Islami">
         </div>
-        <input type="file" id="input-brosur-ulya" accept=".pdf, image/*">
-    </div>
+
+        <div class="mb-3">
+            <label for="input-pendaftaran">Link Pendaftaran Online (URL)</label>
+            <input type="url" id="input-pendaftaran" placeholder="https://forms.gle/...">
+        </div>
+
+        <!-- Kontak WhatsApp 1 -->
+        <div class="mb-3">
+            <label>Nama Kontak 1</label>
+            <input type="text" id="wa-name-1" placeholder="Contoh: Admin TKQ">
+        </div>
+        <div class="mb-3">
+            <label>Nomor WhatsApp 1</label>
+            <input type="text" id="wa-number-1" placeholder="628xxxxxxxxxx">
+        </div>
+
+        <!-- Kontak WhatsApp 2 -->
+        <div class="mb-3">
+            <label>Nama Kontak 2</label>
+            <input type="text" id="wa-name-2" placeholder="Contoh: Admin ULA">
+        </div>
+        <div class="mb-3">
+            <label>Nomor WhatsApp 2</label>
+            <input type="text" id="wa-number-2" placeholder="628xxxxxxxxxx">
+        </div>
+
+        <!-- Kontak WhatsApp 3 -->
+        <div class="mb-3">
+            <label>Nama Kontak 3</label>
+            <input type="text" id="wa-name-3" placeholder="Contoh: Admin WUSTHO">
+        </div>
+        <div class="mb-3">
+            <label>Nomor WhatsApp 3</label>
+            <input type="text" id="wa-number-3" placeholder="628xxxxxxxxxx">
+        </div>
+
+        <!-- Upload Brosur per Tingkatan (PDF/Gambar) -->
+        <div class="brochure-section">
+            <h3>Upload Brosur per Tingkatan (PDF/Gambar)</h3>
+
+            <!-- Brosur TKQ -->
+            <div class="mb-3">
+                <label>Brosur TKQ</label>
+                <div id="status-brosur-tkq" class="status-badge">
+                    ✓ Brosur sudah diupload. 
+                    <button type="button" id="btn-hapus-tkq" class="btn-delete-file">Hapus / Ganti</button>
+                </div>
+                <input type="file" id="input-brosur-tkq" accept=".pdf, image/*">
+            </div>
+
+            <!-- Brosur ULA -->
+            <div class="mb-3">
+                <label>Brosur ULA (SD)</label>
+                <div id="status-brosur-ula" class="status-badge">
+                    ✓ Brosur sudah diupload. 
+                    <button type="button" id="btn-hapus-ula" class="btn-delete-file">Hapus / Ganti</button>
+                </div>
+                <input type="file" id="input-brosur-ula" accept=".pdf, image/*">
+            </div>
+
+            <!-- Brosur WUSTHO -->
+            <div class="mb-3">
+                <label>Brosur WUSTHO (SMP)</label>
+                <div id="status-brosur-wustho" class="status-badge">
+                    ✓ Brosur sudah diupload. 
+                    <button type="button" id="btn-hapus-wustho" class="btn-delete-file">Hapus / Ganti</button>
+                </div>
+                <input type="file" id="input-brosur-wustho" accept=".pdf, image/*">
+            </div>
+
+            <!-- Brosur ULYA -->
+            <div class="mb-3">
+                <label>Brosur ULYA (SMA)</label>
+                <div id="status-brosur-ulya" class="status-badge">
+                    ✓ Brosur sudah diupload. 
+                    <button type="button" id="btn-hapus-ulya" class="btn-delete-file">Hapus / Ganti</button>
+                </div>
+                <input type="file" id="input-brosur-ulya" accept=".pdf, image/*">
+            </div>
+        </div>
+
+        <button type="submit" class="btn-save">SIMPAN PERUBAHAN</button>
+    </form>
+
+    <a href="index.html" class="back-link">← Kembali ke halaman publik</a>
 </div>
+
+<!-- Sambungkan ke file JavaScript admin Anda -->
+<script type="module" src="admin.js"></script>
+
+</body>
+</html>
