@@ -1,6 +1,31 @@
-function getData(){return JSON.parse(localStorage.getItem("lh_linkbio")||JSON.stringify(window.DEFAULT_DATA))}
-function render(){const d=getData(); document.getElementById("schoolName").innerHTML=d.schoolName.replace(" ","<br>"); document.getElementById("tagline").textContent=d.tagline;
-let h=`<a class="btn gold" href="${d.website}" target="_blank">🌐 <span>Kunjungi Website Pendaftaran</span></a>`;
-d.brochures.filter(x=>x.active).forEach(x=>h+=`<a class="btn" href="${x.url}" target="_blank">📥 <span>${x.name}</span></a>`);
-h+=`<a class="btn wa" href="https://wa.me/${d.whatsapp}" target="_blank">💬 <span>Hubungi Admin WhatsApp</span></a>`;
-document.getElementById("links").innerHTML=h} render();
+document.addEventListener("DOMContentLoaded", () => {
+    // Muat Judul & Logo
+    const title = localStorage.getItem("schoolTitle");
+    if (title) document.getElementById("display-judul").innerText = title;
+
+    const logo = localStorage.getItem("schoolLogo");
+    if (logo) document.getElementById("display-logo").src = logo;
+
+    // Muat 3 Tombol WhatsApp
+    const waContainer = document.getElementById("whatsapp-container");
+    waContainer.innerHTML = ""; // Bersihkan wadah
+
+    for (let i = 1; i <= 3; i++) {
+        const name = localStorage.getItem(`waName${i}`);
+        const number = localStorage.getItem(`waNumber${i}`);
+
+        if (number) {
+            // Bersihkan nomor dari karakter non-angka (spasi, +, -)
+            const cleanNumber = number.replace(/\D/g, '');
+            const defaultText = encodeURIComponent("Halo, saya ingin bertanya mengenai pendaftaran.");
+            
+            const btn = document.createElement("a");
+            btn.href = `https://wa.me/${cleanNumber}?text=${defaultText}`;
+            btn.className = "btn-whatsapp"; // Sesuaikan class CSS Anda
+            btn.target = "_blank";
+            btn.innerText = `WhatsApp: ${name || 'Admin ' + i}`;
+            
+            waContainer.appendChild(btn);
+        }
+    }
+});
