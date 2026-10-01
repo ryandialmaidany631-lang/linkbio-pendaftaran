@@ -20,7 +20,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         if (docSnap.exists()) {
             const data = docSnap.data();
             
-            // 1. Judul & Tagline
+            // 1. Judul & Tagline (Pemisahan Baris)
             const judulEl = document.getElementById("display-judul");
             if (judulEl) {
                 let rawJudul = data.judul || "TKQ Luqmanul Hakim Ponpes Luqmanul Hakim Medan";
@@ -73,7 +73,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                 }
             }
 
-            // 5. Brosur dengan Fitur Popup Modal & Download
+            // 5. Brosur dengan Fitur Popup Layar Penuh Hitam
             const brochureWrapper = document.getElementById("brochure-section-wrapper");
             const brochureContainer = document.getElementById("brochure-container");
             if (brochureContainer && brochureWrapper) {
@@ -91,7 +91,6 @@ window.addEventListener("DOMContentLoaded", async () => {
                     const url = data[`brochure_${lvl.key}`];
                     if (url) {
                         hasBrochure = true;
-                        // Ubah href menjadi # dan tambahkan data-url agar tidak langsung pindah halaman
                         brochureHtml += `<a href="#" class="view-brochure-btn" data-url="${url}">📄 ${lvl.label}</a>`;
                     }
                 });
@@ -100,48 +99,41 @@ window.addEventListener("DOMContentLoaded", async () => {
                     brochureContainer.innerHTML = brochureHtml;
                     brochureWrapper.style.display = "block";
 
-                    // ==========================================
-                    // LOGIKA POPUP MODAL (TIDAK GANGGU YANG LAIN)
-                    // ==========================================
+                    // LOGIKA POPUP GAMBAR FULLSCREEN
                     const btns = brochureContainer.querySelectorAll('.view-brochure-btn');
                     const modal = document.getElementById('brochure-modal');
-                    const frame = document.getElementById('brochure-frame');
+                    const imgElement = document.getElementById('brochure-image');
                     const downloadBtn = document.getElementById('download-brochure-btn');
                     const closeBtn = document.getElementById('close-modal');
 
-                    if (modal && frame && downloadBtn && closeBtn) {
-                        // Saat tombol brosur diklik
+                    if (modal && imgElement && downloadBtn && closeBtn) {
                         btns.forEach(btn => {
                             btn.addEventListener('click', (e) => {
-                                e.preventDefault(); // Cegah layar lompat ke atas
+                                e.preventDefault(); 
                                 const url = btn.getAttribute('data-url');
-                                frame.src = url; // Muat brosur ke dalam bingkai
+                                imgElement.src = url; // Muat gambar ke tengah layar
                                 downloadBtn.href = url; // Atur link download
-                                modal.style.display = 'flex'; // Munculkan popup
+                                modal.style.display = 'flex'; 
                             });
                         });
 
-                        // Saat tombol silang (Tutup) diklik
                         closeBtn.addEventListener('click', () => {
                             modal.style.display = 'none';
-                            frame.src = ''; // Bersihkan memori iframe
+                            imgElement.src = ''; 
                         });
 
-                        // Saat area hitam di luar bingkai diklik (otomatis tutup)
+                        // Tutup otomatis jika layar hitam diklik
                         modal.addEventListener('click', (e) => {
                             if(e.target === modal) {
                                 modal.style.display = 'none';
-                                frame.src = '';
+                                imgElement.src = '';
                             }
                         });
                     }
                 }
             }
-        } else {
-            const judulEl = document.getElementById("display-judul");
-            if (judulEl) judulEl.innerText = "Pendaftaran Sekolah";
         }
     } catch (err) {
-        console.error("Gagal memuat data publik:", err);
+        console.error("Gagal memuat data:", err);
     }
 });
