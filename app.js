@@ -20,7 +20,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         if (docSnap.exists()) {
             const data = docSnap.data();
             
-            // 1. Judul & Tagline (Pemisahan Baris)
+            // 1. Judul & Tagline
             const judulEl = document.getElementById("display-judul");
             if (judulEl) {
                 let rawJudul = data.judul || "TKQ Luqmanul Hakim Ponpes Luqmanul Hakim Medan";
@@ -73,7 +73,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                 }
             }
 
-            // 5. Brosur dengan Fitur Popup Layar Penuh Hitam
+            // 5. Brosur dengan Fitur Paksa Download (Tanpa Tab Baru)
             const brochureWrapper = document.getElementById("brochure-section-wrapper");
             const brochureContainer = document.getElementById("brochure-container");
             if (brochureContainer && brochureWrapper) {
@@ -91,7 +91,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                     const url = data[`brochure_${lvl.key}`];
                     if (url) {
                         hasBrochure = true;
-                        brochureHtml += `<a href="#" class="view-brochure-btn" data-url="${url}">📄 ${lvl.label}</a>`;
+                        brochureHtml += `<a href="#" class="view-brochure-btn" data-url="${url}" data-name="${lvl.label.replace(/\s+/g, '_')}.jpg">📄 ${lvl.label}</a>`;
                     }
                 });
                 
@@ -99,7 +99,6 @@ window.addEventListener("DOMContentLoaded", async () => {
                     brochureContainer.innerHTML = brochureHtml;
                     brochureWrapper.style.display = "block";
 
-                    // LOGIKA POPUP GAMBAR FULLSCREEN
                     const btns = brochureContainer.querySelectorAll('.view-brochure-btn');
                     const modal = document.getElementById('brochure-modal');
                     const imgElement = document.getElementById('brochure-image');
@@ -107,22 +106,63 @@ window.addEventListener("DOMContentLoaded", async () => {
                     const closeBtn = document.getElementById('close-modal');
 
                     if (modal && imgElement && downloadBtn && closeBtn) {
+                        // Saat Brosur Diklik (Membuka Popup Layar Hitam)
                         btns.forEach(btn => {
                             btn.addEventListener('click', (e) => {
                                 e.preventDefault(); 
                                 const url = btn.getAttribute('data-url');
-                                imgElement.src = url; // Muat gambar ke tengah layar
-                                downloadBtn.href = url; // Atur link download
+                                const fileName = btn.getAttribute('data-name');
+                                
+                                imgElement.src = url; 
+                                downloadBtn.setAttribute('data-url', url); // Simpan url sementara di tombol
+                                downloadBtn.setAttribute('data-filename', fileName);
                                 modal.style.display = 'flex'; 
                             });
                         });
 
+                        // FUNGSI PAKSA DOWNLOAD (Mencegah buka tab baru)
+                        downloadBtn.addEventListener('click', async (e) => {
+                            e.preventDefault();
+                            const url = downloadBtn.getAttribute('data-url');
+                            const fileName = downloadBtn.getAttribute('data-filename');
+                            if (!url) return;
+
+                            // Berikan efek loading agar wali murid tahu file sedang diproses
+                            const originalText = downloadBtn.innerText;
+                            downloadBtn.innerText = "⏳ Memproses...";
+                            downloadBtn.style.opacity = "0.7";
+
+                            try {
+                                const response = await fetch(url);
+                                const blob = await response.blob();
+                                const blobUrl = window.URL.createObjectURL(blob);
+                                
+                                // Buat link tersembunyi untuk memicu download
+                                const tempLink = document.createElement('a');
+                                tempLink.style.display = 'none';
+                                tempLink.href = blobUrl;
+                                tempLink.download = fileName; // Menggunakan nama sesuai tingkat (misal: Brosur_TKQ.jpg)
+                                
+                                document.body.appendChild(tempLink);
+                                tempLink.click();
+                                document.body.removeChild(tempLink);
+                                window.URL.revokeObjectURL(blobUrl);
+                            } catch (error) {
+                                console.error("Gagal mendownload brosur:", error);
+                                alert("Gagal mendownload brosur. Silakan coba lagi.");
+                            } finally {
+                                downloadBtn.innerText = originalText;
+                                downloadBtn.style.opacity = "1";
+                            }
+                        });
+
+                        // Tombol Tutup Silang
                         closeBtn.addEventListener('click', () => {
                             modal.style.display = 'none';
                             imgElement.src = ''; 
                         });
 
-                        // Tutup otomatis jika layar hitam diklik
+                        // Tutup otomatis jika latar belakang hitam diklik
                         modal.addEventListener('click', (e) => {
                             if(e.target === modal) {
                                 modal.style.display = 'none';
