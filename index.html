@@ -37,190 +37,130 @@
             animation: fadeInUp 0.6s ease-out forwards;
         }
         
-        /* Animasi Masuk Halaman */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Logo Styling - Besar & Elegan */
-        #logo-container {
-            margin-bottom: 22px;
-            display: none;
-        }
+        #logo-container { margin-bottom: 22px; display: none; }
         #display-logo {
-            width: 120px;
-            height: 120px;
-            object-fit: contain;
-            border-radius: 50%;
-            padding: 6px;
-            background: #ffffff;
+            width: 120px; height: 120px; object-fit: contain;
+            border-radius: 50%; padding: 6px; background: #ffffff;
             box-shadow: 0 10px 25px rgba(30, 58, 138, 0.15);
-            border: 3px solid #e0f2fe;
-            transition: transform 0.3s ease;
+            border: 3px solid #e0f2fe; transition: transform 0.3s ease;
         }
-        #display-logo:hover {
-            transform: scale(1.05);
-        }
+        #display-logo:hover { transform: scale(1.05); }
 
-        /* Judul & Tagline */
         #display-judul {
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 8px;
-            color: #0f172a;
-            line-height: 1.4;
-            letter-spacing: -0.02em;
+            font-size: 20px; font-weight: 800; margin-bottom: 8px;
+            color: #0f172a; line-height: 1.4; letter-spacing: -0.02em;
         }
         #display-tagline {
-            font-size: 13px;
-            color: #64748b;
-            margin-bottom: 30px;
-            line-height: 1.5;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 13px; color: #64748b; margin-bottom: 30px;
+            line-height: 1.5; font-weight: 600; text-transform: uppercase;
         }
 
-        /* Section Label */
         .section-label {
-            font-weight: 700;
-            font-size: 11px;
-            color: #64748b;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            font-weight: 700; font-size: 11px; color: #64748b;
+            margin-bottom: 12px; text-transform: uppercase;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .section-label::before, .section-label::after {
-            content: "";
-            height: 1px;
-            flex: 1;
-            background: #e2e8f0;
-            max-width: 40px;
+            content: ""; height: 1px; flex: 1; background: #e2e8f0; max-width: 40px;
         }
 
-        /* Transisi & Efek Interaktif Tombol */
-        a {
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        }
-        a:active {
-            transform: scale(0.96) !important;
-        }
+        a { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important; }
+        a:active { transform: scale(0.96) !important; }
 
-        /* Website Pendaftaran Online */
-        .link-section {
-            margin-bottom: 25px;
-        }
+        .link-section { margin-bottom: 25px; }
         #link-pendaftaran {
-            display: none;
-            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 14px;
-            text-decoration: none;
-            font-weight: 700;
-            width: 100%;
-            font-size: 15px;
+            display: none; background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: white; padding: 15px 20px; border-radius: 14px; text-decoration: none;
+            font-weight: 700; width: 100%; font-size: 15px;
             box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
         }
-        #link-pendaftaran:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.45);
-            filter: brightness(1.05);
-        }
+        #link-pendaftaran:hover { transform: translateY(-2px); filter: brightness(1.05); }
 
-        /* WhatsApp Section */
-        #whatsapp-section-wrapper {
-            display: none;
-            margin-bottom: 25px;
-        }
+        #whatsapp-section-wrapper { display: none; margin-bottom: 25px; }
         #whatsapp-container a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            display: flex; align-items: center; justify-content: center;
             background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
-            color: white;
-            padding: 14px 18px;
-            border-radius: 14px;
-            text-decoration: none;
-            font-weight: 700;
-            margin-bottom: 12px;
-            font-size: 14px;
-            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3);
+            color: white; padding: 14px 18px; border-radius: 14px;
+            text-decoration: none; font-weight: 700; margin-bottom: 12px; font-size: 14px;
         }
-        #whatsapp-container a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
-            filter: brightness(1.05);
-        }
+        #whatsapp-container a:hover { transform: translateY(-2px); filter: brightness(1.05); }
 
-        /* Brosur Section */
-        #brochure-section-wrapper {
-            display: none;
-        }
+        #brochure-section-wrapper { display: none; }
         #brochure-container a {
-            display: block;
-            background-color: #f8fafc;
-            color: #334155;
-            border: 1px solid #cbd5e1;
-            padding: 14px 18px;
-            border-radius: 14px;
-            text-decoration: none;
-            font-weight: 700;
-            margin-bottom: 10px;
-            font-size: 14px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            display: block; background-color: #f8fafc; color: #334155;
+            border: 1px solid #cbd5e1; padding: 14px 18px; border-radius: 14px;
+            text-decoration: none; font-weight: 700; margin-bottom: 10px; font-size: 14px;
         }
         #brochure-container a:hover {
-            background-color: #f1f5f9;
-            border-color: #94a3b8;
-            color: #0f172a;
-            transform: translateY(-1px);
+            background-color: #f1f5f9; border-color: #94a3b8; color: #0f172a; transform: translateY(-1px);
+        }
+
+        /* ======= CSS POPUP MODAL BROSUR ======= */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.85); z-index: 1000;
+            justify-content: center; align-items: center;
+            backdrop-filter: blur(4px); opacity: 0; animation: fadeInModal 0.3s forwards;
+        }
+        @keyframes fadeInModal { to { opacity: 1; } }
+        .modal-content {
+            background: white; width: 90%; max-width: 500px; padding: 20px;
+            border-radius: 20px; position: relative; display: flex; flex-direction: column; gap: 15px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+        .close-btn {
+            position: absolute; top: -15px; right: -15px; background: #ef4444; color: white;
+            border: none; border-radius: 50%; width: 36px; height: 36px;
+            font-size: 24px; font-weight: bold; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+        }
+        .download-btn {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white !important; padding: 12px 20px; border-radius: 12px;
+            text-decoration: none; font-weight: 700; text-align: center; display: block;
+            font-size: 15px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+        .download-btn:hover { transform: translateY(-2px); }
+        #brochure-frame {
+            width: 100%; height: 60vh; border: 2px dashed #cbd5e1;
+            border-radius: 12px; background: #f8fafc;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        
-        <!-- Logo Sekolah -->
-        <div id="logo-container">
-            <img id="display-logo" src="" alt="Logo Sekolah">
-        </div>
-
-        <!-- Judul & Tagline -->
+        <div id="logo-container"><img id="display-logo" src="" alt="Logo Sekolah"></div>
         <h1 id="display-judul">Memuat...</h1>
         <p id="display-tagline">Link Pendaftaran & Info Pendaftaran</p>
 
-        <!-- Website Pendaftaran Online -->
-        <div class="link-section">
-            <a id="link-pendaftaran" href="#" target="_blank">✨ Website Pendaftaran Online</a>
-        </div>
+        <div class="link-section"><a id="link-pendaftaran" href="#" target="_blank">✨ Website Pendaftaran Online</a></div>
 
-        <!-- Tombol WhatsApp (Kontak Person) -->
         <div id="whatsapp-section-wrapper">
             <div class="section-label">Kontak Informasi & Pendaftaran</div>
             <div id="whatsapp-container"></div>
         </div>
 
-        <!-- Brosur 4 Tingkatan -->
         <div id="brochure-section-wrapper">
-            <div class="section-label">Download Brosur Pendaftaran</div>
+            <div class="section-label">Lihat & Download Brosur</div>
             <div id="brochure-container"></div>
         </div>
     </div>
 
-    <!-- Script Utama (Terhubung dengan app.js yang sudah diatur pemisahan judulnya) -->
-    <script type="module" src="app.js?v=306"></script>
+    <!-- Kotak Popup (Modal) Brosur -->
+    <div id="brochure-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="close-modal" class="close-btn">&times;</button>
+            <a id="download-brochure-btn" href="#" target="_blank" download class="download-btn">⬇️ Download Brosur</a>
+            <iframe id="brochure-frame" src="" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <!-- Mengubah versi app.js agar browser memuat file yang baru -->
+    <script type="module" src="app.js?v=307"></script>
 </body>
 </html>
