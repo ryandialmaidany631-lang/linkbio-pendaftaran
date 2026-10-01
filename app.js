@@ -20,16 +20,14 @@ window.addEventListener("DOMContentLoaded", async () => {
         if (docSnap.exists()) {
             const data = docSnap.data();
             
-            // 1. Judul & Tagline (Pemisahan Baris Otomatis: Baris 1 TKQ, Baris 2 Ponpes)
+            // 1. Judul & Tagline
             const judulEl = document.getElementById("display-judul");
             if (judulEl) {
                 let rawJudul = data.judul || "TKQ Luqmanul Hakim Ponpes Luqmanul Hakim Medan";
-                
                 if (rawJudul.toUpperCase().includes("PONPES")) {
                     let parts = rawJudul.split(/ponpes/i);
                     let baris1 = parts[0].trim();
                     let baris2 = "PONPES " + parts[1].trim();
-                    
                     judulEl.innerHTML = `${baris1}<br><span style="font-size: 17px; font-weight: 700; color: #2563eb; display: inline-block; margin-top: 4px;">${baris2}</span>`;
                 } else {
                     judulEl.innerText = rawJudul;
@@ -37,9 +35,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             }
             
             const taglineEl = document.getElementById("display-tagline");
-            if (taglineEl) {
-                taglineEl.innerText = data.tagline || "Link Pendaftaran & Info Pendaftaran";
-            }
+            if (taglineEl) taglineEl.innerText = data.tagline || "Link Pendaftaran & Info Pendaftaran";
             
             // 2. Logo Sekolah
             const logoContainer = document.getElementById("logo-container");
@@ -56,31 +52,28 @@ window.addEventListener("DOMContentLoaded", async () => {
                 linkPendaftaran.style.display = "block";
             }
 
-            // 4. Kontak WhatsApp (Dibersihkan otomatis agar langsung terhubung ke WA)
+            // 4. Kontak WhatsApp
             const waWrapper = document.getElementById("whatsapp-section-wrapper");
             const waContainer = document.getElementById("whatsapp-container");
             if (waContainer && waWrapper) {
                 let waHtml = "";
                 let hasWa = false;
-                
                 for (let i = 1; i <= 3; i++) {
                     const name = data[`waName${i}`];
                     let rawNumber = data[`waNumber${i}`] || "";
                     let cleanNumber = rawNumber.replace(/[^0-9]/g, "");
-
                     if (name && cleanNumber) {
                         hasWa = true;
                         waHtml += `<a href="https://wa.me/${cleanNumber}" target="_blank">${name}</a>`;
                     }
                 }
-                
                 if (hasWa) {
                     waContainer.innerHTML = waHtml;
                     waWrapper.style.display = "block";
                 }
             }
 
-            // 5. Brosur per Tingkatan (TKQ, ULA, WUSTHO, ULYA)
+            // 5. Brosur dengan Fitur Popup Modal & Download
             const brochureWrapper = document.getElementById("brochure-section-wrapper");
             const brochureContainer = document.getElementById("brochure-container");
             if (brochureContainer && brochureWrapper) {
@@ -98,23 +91,57 @@ window.addEventListener("DOMContentLoaded", async () => {
                     const url = data[`brochure_${lvl.key}`];
                     if (url) {
                         hasBrochure = true;
-                        brochureHtml += `<a href="${url}" target="_blank">${lvl.label}</a>`;
+                        // Ubah href menjadi # dan tambahkan data-url agar tidak langsung pindah halaman
+                        brochureHtml += `<a href="#" class="view-brochure-btn" data-url="${url}">📄 ${lvl.label}</a>`;
                     }
                 });
                 
                 if (hasBrochure) {
                     brochureContainer.innerHTML = brochureHtml;
                     brochureWrapper.style.display = "block";
+
+                    // ==========================================
+                    // LOGIKA POPUP MODAL (TIDAK GANGGU YANG LAIN)
+                    // ==========================================
+                    const btns = brochureContainer.querySelectorAll('.view-brochure-btn');
+                    const modal = document.getElementById('brochure-modal');
+                    const frame = document.getElementById('brochure-frame');
+                    const downloadBtn = document.getElementById('download-brochure-btn');
+                    const closeBtn = document.getElementById('close-modal');
+
+                    if (modal && frame && downloadBtn && closeBtn) {
+                        // Saat tombol brosur diklik
+                        btns.forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                e.preventDefault(); // Cegah layar lompat ke atas
+                                const url = btn.getAttribute('data-url');
+                                frame.src = url; // Muat brosur ke dalam bingkai
+                                downloadBtn.href = url; // Atur link download
+                                modal.style.display = 'flex'; // Munculkan popup
+                            });
+                        });
+
+                        // Saat tombol silang (Tutup) diklik
+                        closeBtn.addEventListener('click', () => {
+                            modal.style.display = 'none';
+                            frame.src = ''; // Bersihkan memori iframe
+                        });
+
+                        // Saat area hitam di luar bingkai diklik (otomatis tutup)
+                        modal.addEventListener('click', (e) => {
+                            if(e.target === modal) {
+                                modal.style.display = 'none';
+                                frame.src = '';
+                            }
+                        });
+                    }
                 }
             }
-
         } else {
             const judulEl = document.getElementById("display-judul");
             if (judulEl) judulEl.innerText = "Pendaftaran Sekolah";
         }
     } catch (err) {
         console.error("Gagal memuat data publik:", err);
-        const judulEl = document.getElementById("display-judul");
-        if (judulEl) judulEl.innerText = "Pendaftaran Sekolah";
     }
 });
