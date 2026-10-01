@@ -9,32 +9,18 @@
     <title>Pendaftaran & Informasi Sekolah</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #3b82f6 100%);
-            color: #1e293b;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            color: #1e293b; min-height: 100vh; display: flex;
+            align-items: center; justify-content: center; padding: 20px;
         }
         .container {
-            width: 100%;
-            max-width: 480px;
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(12px);
-            margin: auto;
-            padding: 40px 25px;
-            border-radius: 28px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
-            text-align: center;
-            animation: fadeInUp 0.6s ease-out forwards;
+            width: 100%; max-width: 480px; background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px); margin: auto; padding: 40px 25px;
+            border-radius: 28px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            text-align: center; animation: fadeInUp 0.6s ease-out forwards;
         }
         
         @keyframes fadeInUp {
@@ -44,97 +30,83 @@
         
         #logo-container { margin-bottom: 22px; display: none; }
         #display-logo {
-            width: 120px; height: 120px; object-fit: contain;
-            border-radius: 50%; padding: 6px; background: #ffffff;
-            box-shadow: 0 10px 25px rgba(30, 58, 138, 0.15);
+            width: 120px; height: 120px; object-fit: contain; border-radius: 50%;
+            padding: 6px; background: #ffffff; box-shadow: 0 10px 25px rgba(30, 58, 138, 0.15);
             border: 3px solid #e0f2fe; transition: transform 0.3s ease;
         }
         #display-logo:hover { transform: scale(1.05); }
 
         #display-judul {
-            font-size: 20px; font-weight: 800; margin-bottom: 8px;
-            color: #0f172a; line-height: 1.4; letter-spacing: -0.02em;
+            font-size: 20px; font-weight: 800; margin-bottom: 8px; color: #0f172a; line-height: 1.4;
         }
         #display-tagline {
-            font-size: 13px; color: #64748b; margin-bottom: 30px;
-            line-height: 1.5; font-weight: 600; text-transform: uppercase;
+            font-size: 13px; color: #64748b; margin-bottom: 30px; font-weight: 600; text-transform: uppercase;
         }
 
         .section-label {
-            font-weight: 700; font-size: 11px; color: #64748b;
-            margin-bottom: 12px; text-transform: uppercase;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-weight: 700; font-size: 11px; color: #64748b; margin-bottom: 12px;
+            text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .section-label::before, .section-label::after {
             content: ""; height: 1px; flex: 1; background: #e2e8f0; max-width: 40px;
         }
 
-        a { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important; }
+        a { transition: all 0.25s ease !important; }
         a:active { transform: scale(0.96) !important; }
 
         .link-section { margin-bottom: 25px; }
         #link-pendaftaran {
             display: none; background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
             color: white; padding: 15px 20px; border-radius: 14px; text-decoration: none;
-            font-weight: 700; width: 100%; font-size: 15px;
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+            font-weight: 700; width: 100%; font-size: 15px; box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
         }
-        #link-pendaftaran:hover { transform: translateY(-2px); filter: brightness(1.05); }
 
         #whatsapp-section-wrapper { display: none; margin-bottom: 25px; }
         #whatsapp-container a {
             display: flex; align-items: center; justify-content: center;
             background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
-            color: white; padding: 14px 18px; border-radius: 14px;
-            text-decoration: none; font-weight: 700; margin-bottom: 12px; font-size: 14px;
+            color: white; padding: 14px 18px; border-radius: 14px; text-decoration: none;
+            font-weight: 700; margin-bottom: 12px; font-size: 14px;
         }
-        #whatsapp-container a:hover { transform: translateY(-2px); filter: brightness(1.05); }
 
         #brochure-section-wrapper { display: none; }
         #brochure-container a {
-            display: block; background-color: #f8fafc; color: #334155;
-            border: 1px solid #cbd5e1; padding: 14px 18px; border-radius: 14px;
-            text-decoration: none; font-weight: 700; margin-bottom: 10px; font-size: 14px;
-        }
-        #brochure-container a:hover {
-            background-color: #f1f5f9; border-color: #94a3b8; color: #0f172a; transform: translateY(-1px);
+            display: block; background-color: #f8fafc; color: #334155; border: 1px solid #cbd5e1;
+            padding: 14px 18px; border-radius: 14px; text-decoration: none; font-weight: 700;
+            margin-bottom: 10px; font-size: 14px;
         }
 
-        /* ======= CSS POPUP MODAL BROSUR ======= */
+        /* ======= CSS POPUP BROSUR (FULLSCREEN LAYAR HITAM) ======= */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.85); z-index: 1000;
-            justify-content: center; align-items: center;
-            backdrop-filter: blur(4px); opacity: 0; animation: fadeInModal 0.3s forwards;
+            background: rgba(0, 0, 0, 0.95); z-index: 1000; flex-direction: column; 
+            align-items: center; opacity: 0; animation: fadeInModal 0.3s forwards;
         }
         @keyframes fadeInModal { to { opacity: 1; } }
-        .modal-content {
-            background: white; width: 90%; max-width: 500px; padding: 20px;
-            border-radius: 20px; position: relative; display: flex; flex-direction: column; gap: 15px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        
+        .modal-top-bar {
+            width: 100%; padding: 15px 25px; display: flex; 
+            justify-content: space-between; align-items: center;
+            background: rgba(0, 0, 0, 0.6);
         }
         .close-btn {
-            position: absolute; top: -15px; right: -15px; background: #ef4444; color: white;
-            border: none; border-radius: 50%; width: 36px; height: 36px;
-            font-size: 24px; font-weight: bold; cursor: pointer; display: flex;
-            align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+            background: none; color: #fff; border: none; font-size: 32px; 
+            font-weight: bold; cursor: pointer; padding: 0 10px;
         }
         .download-btn {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white !important; padding: 12px 20px; border-radius: 12px;
-            text-decoration: none; font-weight: 700; text-align: center; display: block;
-            font-size: 15px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            background: #f59e0b; color: white !important; padding: 10px 20px; 
+            border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 15px;
         }
-        .download-btn:hover { transform: translateY(-2px); }
-        #brochure-frame {
-            width: 100%; height: 60vh; border: 2px dashed #cbd5e1;
-            border-radius: 12px; background: #f8fafc;
+        
+        #brochure-image {
+            max-width: 95%; max-height: calc(100vh - 80px); 
+            object-fit: contain; margin-top: 15px; border-radius: 8px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="logo-container"><img id="display-logo" src="" alt="Logo Sekolah"></div>
+        <div id="logo-container"><img id="display-logo" src="" alt="Logo"></div>
         <h1 id="display-judul">Memuat...</h1>
         <p id="display-tagline">Link Pendaftaran & Info Pendaftaran</p>
 
@@ -151,16 +123,18 @@
         </div>
     </div>
 
-    <!-- Kotak Popup (Modal) Brosur -->
+    <!-- Kotak Popup (Layar Penuh Hitam) Khusus Gambar -->
     <div id="brochure-modal" class="modal-overlay">
-        <div class="modal-content">
+        <div class="modal-top-bar">
+            <!-- Tombol Download di Atas Gambar -->
+            <a id="download-brochure-btn" href="#" target="_blank" download="Brosur_Pendaftaran" class="download-btn">⬇️ Download Brosur</a>
+            <!-- Tombol Tutup Silang -->
             <button id="close-modal" class="close-btn">&times;</button>
-            <a id="download-brochure-btn" href="#" target="_blank" download class="download-btn">⬇️ Download Brosur</a>
-            <iframe id="brochure-frame" src="" frameborder="0"></iframe>
         </div>
+        <!-- Menampilkan langsung Gambar (Bukan Iframe) -->
+        <img id="brochure-image" src="" alt="Brosur Sekolah">
     </div>
 
-    <!-- Mengubah versi app.js agar browser memuat file yang baru -->
-    <script type="module" src="app.js?v=307"></script>
+    <script type="module" src="app.js?v=308"></script>
 </body>
 </html>
