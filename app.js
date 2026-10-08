@@ -13,26 +13,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// [FITUR BARU] Mencatat Kunjungan Halaman Otomatis
-async function catatKunjungan() {
-    const statRef = doc(db, "situs", "statistik");
-    try {
-        await updateDoc(statRef, { kunjungan: increment(1) });
-    } catch (e) {
-        // Jika belum ada datanya, buat baru
-        await setDoc(statRef, { kunjungan: 1, dl_tkq: 0, dl_ula: 0, dl_wustho: 0, dl_ulya: 0 }, { merge: true });
-    }
-}
-catatKunjungan(); // Panggil saat web terbuka
-
 window.addEventListener("DOMContentLoaded", async () => {
+    // =========================================================
+    // 1. TAMPILKAN HALAMAN WEB TERLEBIH DAHULU (Prioritas Utama)
+    // =========================================================
     try {
         const docSnap = await getDoc(doc(db, "situs", "pengaturan"));
         
         if (docSnap.exists()) {
             const data = docSnap.data();
             
-            // 1. Judul & Tagline
+            // Judul & Tagline
             const judulEl = document.getElementById("display-judul");
             if (judulEl) {
                 let rawJudul = data.judul || "TKQ Luqmanul Hakim Ponpes Luqmanul Hakim Medan";
@@ -49,7 +40,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             const taglineEl = document.getElementById("display-tagline");
             if (taglineEl) taglineEl.innerText = data.tagline || "Link Pendaftaran & Info Pendaftaran";
             
-            // 2. Logo Sekolah
+            // Logo Sekolah
             const logoContainer = document.getElementById("logo-container");
             const displayLogo = document.getElementById("display-logo");
             if (data.logoUrl && logoContainer && displayLogo) {
@@ -57,14 +48,14 @@ window.addEventListener("DOMContentLoaded", async () => {
                 logoContainer.style.display = "block";
             }
 
-            // 3. Website Pendaftaran
+            // Website Pendaftaran
             const linkPendaftaran = document.getElementById("link-pendaftaran");
             if (linkPendaftaran && data.pendaftaranLink) {
                 linkPendaftaran.href = data.pendaftaranLink;
                 linkPendaftaran.style.display = "block";
             }
 
-            // 4. Kontak WhatsApp
+            // Kontak WhatsApp
             const waWrapper = document.getElementById("whatsapp-section-wrapper");
             const waContainer = document.getElementById("whatsapp-container");
             if (waContainer && waWrapper) {
@@ -85,7 +76,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                 }
             }
 
-            // 5. Brosur dengan Fitur Paksa Download + Tracking Statistik
+            // Brosur & Popup
             const brochureWrapper = document.getElementById("brochure-section-wrapper");
             const brochureContainer = document.getElementById("brochure-container");
             if (brochureContainer && brochureWrapper) {
@@ -103,7 +94,6 @@ window.addEventListener("DOMContentLoaded", async () => {
                     const url = data[`brochure_${lvl.key}`];
                     if (url) {
                         hasBrochure = true;
-                        // Tambahkan data-tingkat untuk mengenali mana yang didownload
                         brochureHtml += `<a href="#" class="view-brochure-btn" data-url="${url}" data-tingkat="${lvl.key}" data-name="${lvl.label.replace(/\s+/g, '_')}.jpg">📄 ${lvl.label}</a>`;
                     }
                 });
@@ -119,7 +109,6 @@ window.addEventListener("DOMContentLoaded", async () => {
                     const closeBtn = document.getElementById('close-modal');
 
                     if (modal && imgElement && downloadBtn && closeBtn) {
-                        // Buka Popup
                         btns.forEach(btn => {
                             btn.addEventListener('click', (e) => {
                                 e.preventDefault(); 
@@ -130,12 +119,11 @@ window.addEventListener("DOMContentLoaded", async () => {
                                 imgElement.src = url; 
                                 downloadBtn.setAttribute('data-url', url); 
                                 downloadBtn.setAttribute('data-filename', fileName);
-                                downloadBtn.setAttribute('data-tingkat', tingkat); // Simpan tingkat
+                                downloadBtn.setAttribute('data-tingkat', tingkat);
                                 modal.style.display = 'flex'; 
                             });
                         });
 
-                        // Proses Download & Catat Statistik
                         downloadBtn.addEventListener('click', async (e) => {
                             e.preventDefault();
                             const url = downloadBtn.getAttribute('data-url');
@@ -143,7 +131,63 @@ window.addEventListener("DOMContentLoaded", async () => {
                             const tingkat = downloadBtn.getAttribute('data-tingkat');
                             if (!url) return;
 
-                            // [FITUR BARU] Mencatat jumlah download berdasarkan tingkat
+                            // Catat log download dengan aman
                             if (tingkat) {
                                 try {
-                                    await updateDoc(doc(db, "situs", "statistik
+                                    await updateDoc(doc(db, "situs", "statistik"), { [`dl_${tingkat}`]: increment(1) });
+                                } catch(err) { /* Abaikan jika error agar tidak mengganggu download */ }
+                            }
+
+                            const originalText = downloadBtn.innerText;
+                            downloadBtn.innerText = "⏳ Memproses...";
+                            downloadBtn.style.opacity = "0.7";
+
+                            try {
+                                const response = await fetch(url);
+                                const blob = await response.blob();
+                                const blobUrl = window.URL.createObjectURL(blob);
+                                const tempLink = document.createElement('a');
+                                tempLink.style.display = 'none';
+                                tempLink.href = blobUrl;
+                                tempLink.download = fileName; 
+                                document.body.appendChild(tempLink);
+                                tempLink.click();
+                                document.body.removeChild(tempLink);
+                                window.URL.revokeObjectURL(blobUrl);
+                            } catch (error) {
+                                alert("Gagal mendownload brosur. Silakan coba lagi.");
+                            } finally {
+                                downloadBtn.innerText = originalText;
+                                downloadBtn.style.opacity = "1";
+                            }
+                        });
+
+                        closeBtn.addEventListener('click', () => { modal.style.display = 'none'; imgElement.src = ''; });
+                        modal.addEventListener('click', (e) => { if(e.target === modal) { modal.style.display = 'none'; imgElement.src = ''; } });
+                    }
+                }
+            }
+        }
+    } catch (err) {
+        console.error("Gagal memuat data:", err);
+        const judul = document.getElementById("display-judul");
+        if(judul) judul.innerText = "Sistem Sedang Sibuk, Coba Muat Ulang (Refresh)";
+    }
+
+    // =========================================================
+    // 2. CATAT KUNJUNGAN DI BELAKANG LAYAR (Delay 1.5 detik)
+    // =========================================================
+    setTimeout(async () => {
+        try {
+            const statRef = doc(db, "situs", "statistik");
+            try {
+                await updateDoc(statRef, { kunjungan: increment(1) });
+            } catch (e) {
+                // Buat dokumen jika belum ada
+                await setDoc(statRef, { kunjungan: 1, dl_tkq: 0, dl_ula: 0, dl_wustho: 0, dl_ulya: 0 }, { merge: true });
+            }
+        } catch (fatalErr) {
+            console.log("Statistik Mode Aman.");
+        }
+    }, 1500);
+});
