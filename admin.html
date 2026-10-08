@@ -13,59 +13,23 @@
     
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc; color: #334155; padding: 30px 20px;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #334155; padding: 30px 20px; }
         .container { max-width: 800px; margin: auto; }
         .header { text-align: center; margin-bottom: 30px; }
         .header h1 { color: #0f172a; font-size: 28px; font-weight: 800; }
-        .card {
-            background: white; padding: 30px; border-radius: 20px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); margin-bottom: 30px;
-        }
-        .card-title {
-            margin-bottom: 20px; border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 15px; color: #0f172a; font-size: 18px; font-weight: 800;
-        }
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); margin-bottom: 30px; border: 1px solid #f1f5f9; }
+        .card-title { margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; color: #0f172a; font-size: 18px; font-weight: 800; }
         
-        label {
-            display: block; font-size: 13px; font-weight: 700; color: #475569;
-            margin-bottom: 8px; margin-top: 20px; text-transform: uppercase;
-        }
-        input[type="text"], input[type="url"] {
-            width: 100%; padding: 14px 16px; border: 1px solid #cbd5e1;
-            border-radius: 12px; outline: none; font-size: 14px; background-color: #f8fafc;
-        }
-        input[type="text"]:focus, input[type="url"]:focus { border-color: #3b82f6; background-color: #ffffff; }
+        label { display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 8px; margin-top: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+        input[type="text"], input[type="url"] { width: 100%; padding: 14px 16px; border: 1px solid #cbd5e1; border-radius: 12px; outline: none; font-size: 13px; background-color: #f8fafc; transition: all 0.2s ease; }
+        input[type="text"]:focus, input[type="url"]:focus { border-color: #3b82f6; background-color: #ffffff; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
         
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
-        /* Desain Panel Upload File yang Baru */
-        .upload-box {
-            background: #f8fafc; border: 2px dashed #cbd5e1; padding: 16px;
-            border-radius: 12px; margin-bottom: 15px; transition: 0.2s;
-        }
-        .upload-box:hover { border-color: #3b82f6; }
-        .upload-box input[type="file"] {
-            display: block; width: 100%; margin-bottom: 10px; font-size: 14px; cursor: pointer;
-        }
-        .url-fallback {
-            font-size: 12px !important; padding: 10px !important; background: #ffffff !important;
-            border: 1px solid #e2e8f0 !important; color: #64748b !important;
-        }
-
-        button[type="submit"] {
-            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-            color: white; border: none; padding: 16px 20px; border-radius: 14px;
-            font-weight: 700; cursor: pointer; width: 100%; font-size: 16px; margin-top: 35px;
-        }
-        button[type="submit"]:hover { transform: translateY(-2px); }
+        button[type="submit"] { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); color: white; border: none; padding: 16px 20px; border-radius: 14px; font-weight: 700; cursor: pointer; width: 100%; font-size: 16px; margin-top: 35px; box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4); }
+        button[type="submit"]:hover { transform: translateY(-2px); box-shadow: 0 15px 25px -5px rgba(37, 99, 235, 0.5); }
         
-        #status-message {
-            display: none; text-align: center; margin-top: 15px; padding: 12px;
-            border-radius: 10px; font-weight: 600; font-size: 14px;
-        }
+        #status-message { display: none; text-align: center; margin-top: 15px; padding: 12px; border-radius: 10px; font-weight: 600; font-size: 14px; }
         .success { background-color: #dcfce7; color: #166534; }
         .error { background-color: #fee2e2; color: #991b1b; }
         
@@ -90,32 +54,48 @@
             <h2 class="card-title">📝 Pengaturan Konten Web</h2>
             
             <form id="admin-form">
-                
                 <label>Judul Website (Ketik 'Ponpes' untuk pisah baris)</label>
-                <input type="text" id="judul" placeholder="Contoh: TKQ Luqmanul Hakim Ponpes Luqmanul Hakim Medan">
+                <input type="text" id="judul">
                 
                 <label>Tagline / Sub-judul</label>
-                <input type="text" id="tagline" placeholder="Contoh: Link Pendaftaran & Info Pendaftaran">
+                <input type="text" id="tagline">
+                
+                <label>Link Logo (Gunakan Link Supabase/Drive)</label>
+                <input type="url" id="logoUrl">
                 
                 <label>Link Website Pendaftaran Online</label>
-                <input type="url" id="pendaftaranLink" placeholder="https://...">
+                <input type="url" id="pendaftaranLink">
 
-                <!-- KEMBALI KE PANEL UPLOAD LOGO -->
-                <h3 style="margin-top: 35px; color: #0f172a; font-size: 16px;">🖼️ Logo Sekolah</h3>
-                <div class="upload-box">
-                    <input type="file" id="file_logo" accept="image/*">
-                    <input type="url" id="logoUrl" class="url-fallback" placeholder="Link logo saat ini (Atau paste link manual di sini)">
+                <h3 style="margin-top: 35px; color: #0f172a; font-size: 16px;">💬 Kontak Admin WhatsApp</h3>
+                <div class="grid-2">
+                    <div><label>Nama Admin 1</label><input type="text" id="waName1"></div>
+                    <div><label>Nomor WA 1 (08...)</label><input type="text" id="waNumber1"></div>
+                    <div><label>Nama Admin 2</label><input type="text" id="waName2"></div>
+                    <div><label>Nomor WA 2</label><input type="text" id="waNumber2"></div>
+                    <div><label>Nama Admin 3</label><input type="text" id="waName3"></div>
+                    <div><label>Nomor WA 3</label><input type="text" id="waNumber3"></div>
                 </div>
 
-                <!-- KEMBALI KE PANEL UPLOAD BROSUR -->
-                <h3 style="margin-top: 35px; color: #0f172a; font-size: 16px;">📄 File Brosur Pendaftaran</h3>
+                <h3 style="margin-top: 35px; color: #0f172a; font-size: 16px;">📄 Link Brosur Pendaftaran (Supabase/Drive)</h3>
+                <label>File Brosur TKQ</label>
+                <input type="url" id="brochure_tkq">
                 
-                <label style="margin-top:0;">Brosur TKQ</label>
-                <div class="upload-box">
-                    <input type="file" id="file_tkq" accept="image/*,.pdf">
-                    <input type="url" id="brochure_tkq" class="url-fallback" placeholder="Link brosur saat ini (Atau paste link manual di sini)">
-                </div>
+                <label>File Brosur ULA (SD)</label>
+                <input type="url" id="brochure_ula">
                 
-                <label style="margin-top:0;">Brosur ULA (SD)</label>
-                <div class="upload-box">
-                    <input type="file" id
+                <label>File Brosur WUSTHO (SMP)</label>
+                <input type="url" id="brochure_wustho">
+                
+                <label>File Brosur ULYA (SMA)</label>
+                <input type="url" id="brochure_ulya">
+
+                <button type="submit" id="btn-simpan">💾 Simpan Perubahan</button>
+                <div id="status-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- PENTING: Perhatikan versi script di bawah ini -->
+    <script type="module" src="admin.js?v=407"></script>
+</body>
+</html>
