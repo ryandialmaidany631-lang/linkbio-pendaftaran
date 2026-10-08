@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+// Konfigurasi Firebase Anda
 const firebaseConfig = {
   apiKey: "AIzaSyAX9MlyLRIz7zcFUtKtnqcc4vNSOzerYMQ",
   authDomain: "linkbio-sekolah.firebaseapp.com",
@@ -11,198 +11,181 @@ const firebaseConfig = {
   appId: "1:149105804714:web:bea6f30b0af1a3c32fd7d3"
 };
 
+// Inisialisasi Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const SUPABASE_URL = 'https://wnstuvnvrfiqmohtkfme.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Induc3R1dm52cmZpcW1vaHRrZm1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyMTE1MzksImV4cCI6MjEwNTc4NzUzOX0.AY-gLTVCQVqu3skr0feamHZRt7-Lob8ls3Ab7SDTVxM'; 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+// Referensi ke database (Pengaturan Konten & Statistik)
+const pengaturanRef = doc(db, "situs", "pengaturan");
+const statistikRef = doc(db, "situs", "statistik");
 
-const levels = ["tkq", "ula", "wustho", "ulya"];
+// Element Form di HTML
+const adminForm = document.getElementById("admin-form");
+const statusMessage = document.getElementById("status-message");
+const btnSimpan = document.getElementById("btn-simpan");
 
-async function muatDataAdmin() {
+// ==========================================
+// 1. FUNGSI MEMUAT DATA PENGATURAN KE FORM
+// ==========================================
+async function muatData() {
     try {
-        const docRef = doc(db, "situs", "pengaturan");
-        const docSnap = await getDoc(docRef);
-        
+        const docSnap = await getDoc(pengaturanRef);
         if (docSnap.exists()) {
             const data = docSnap.data();
-
-            if (document.getElementById("input-judul")) document.getElementById("input-judul").value = data.judul || "";
-            if (document.getElementById("input-tagline")) document.getElementById("input-tagline").value = data.tagline || "";
-            if (document.getElementById("input-pendaftaran")) document.getElementById("input-pendaftaran").value = data.pendaftaranLink || "";
             
-            for (let i = 1; i <= 3; i++) {
-                if (document.getElementById(`wa-name-${i}`)) document.getElementById(`wa-name-${i}`).value = data[`waName${i}`] || "";
-                if (document.getElementById(`wa-number-${i}`)) document.getElementById(`wa-number-${i}`).value = data[`waNumber${i}`] || "";
-            }
-
-            // Cek status Logo
-            const statusLogo = document.getElementById("status-logo");
-            if (statusLogo) {
-                if (data.logoUrl && data.logoUrl.trim() !== "") {
-                    statusLogo.style.display = "block";
-                } else {
-                    statusLogo.style.display = "none";
-                }
-            }
-
-            // Cek status brosur per tingkatan
-            levels.forEach(lvl => {
-                const statusEl = document.getElementById(`status-brosur-${lvl}`);
-                if (statusEl) {
-                    if (data[`brochure_${lvl}`] && data[`brochure_${lvl}`].trim() !== "") {
-                        statusEl.style.display = "block";
-                    } else {
-                        statusEl.style.display = "none";
-                    }
-                }
-            });
+            // Isi form dengan data yang ada di database
+            if(document.getElementById("judul")) document.getElementById("judul").value = data.judul || "";
+            if(document.getElementById("tagline")) document.getElementById("tagline").value = data.tagline || "";
+            if(document.getElementById("logoUrl")) document.getElementById("logoUrl").value = data.logoUrl || "";
+            if(document.getElementById("pendaftaranLink")) document.getElementById("pendaftaranLink").value = data.pendaftaranLink || "";
+            
+            if(document.getElementById("waName1")) document.getElementById("waName1").value = data.waName1 || "";
+            if(document.getElementById("waNumber1")) document.getElementById("waNumber1").value = data.waNumber1 || "";
+            if(document.getElementById("waName2")) document.getElementById("waName2").value = data.waName2 || "";
+            if(document.getElementById("waNumber2")) document.getElementById("waNumber2").value = data.waNumber2 || "";
+            if(document.getElementById("waName3")) document.getElementById("waName3").value = data.waName3 || "";
+            if(document.getElementById("waNumber3")) document.getElementById("waNumber3").value = data.waNumber3 || "";
+            
+            if(document.getElementById("brochure_tkq")) document.getElementById("brochure_tkq").value = data.brochure_tkq || "";
+            if(document.getElementById("brochure_ula")) document.getElementById("brochure_ula").value = data.brochure_ula || "";
+            if(document.getElementById("brochure_wustho")) document.getElementById("brochure_wustho").value = data.brochure_wustho || "";
+            if(document.getElementById("brochure_ulya")) document.getElementById("brochure_ulya").value = data.brochure_ulya || "";
         }
-    } catch (err) {
-        console.error("Gagal memuat form admin:", err);
+    } catch (error) {
+        console.error("Gagal memuat data pengaturan:", error);
+        tampilkanPesan("Gagal memuat data dari database. Periksa koneksi internet.", "error");
     }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-    muatDataAdmin();
+// ==========================================
+// 2. FUNGSI MENYIMPAN DATA KE FIREBASE
+// ==========================================
+if (adminForm) {
+    adminForm.addEventListener("submit", async (e) => {
+        e.preventDefault(); // Mencegah reload halaman
+        
+        // Ubah tombol jadi status loading
+        const originalText = btnSimpan.innerText;
+        btnSimpan.innerText = "⏳ Menyimpan Perubahan...";
+        btnSimpan.disabled = true;
+        statusMessage.style.display = "none";
 
-    // Event Listener Hapus Logo
-    const btnHapusLogo = document.getElementById("btn-hapus-logo");
-    if (btnHapusLogo) {
-        btnHapusLogo.addEventListener("click", async () => {
-            if (confirm("Yakin ingin menghapus logo sekolah?")) {
-                try {
-                    const docRef = doc(db, "situs", "pengaturan");
-                    await setDoc(docRef, { logoUrl: "" }, { merge: true });
-                    alert("Logo berhasil dihapus.");
-                    await muatDataAdmin();
-                } catch (err) {
-                    alert("Gagal menghapus logo: " + err.message);
-                }
-            }
-        });
-    }
-
-    // Event Listener Hapus Brosur per Tingkatan
-    levels.forEach(lvl => {
-        const btnHapus = document.getElementById(`btn-hapus-${lvl}`);
-        if (btnHapus) {
-            btnHapus.addEventListener("click", async () => {
-                if (confirm(`Yakin ingin menghapus brosur ${lvl.toUpperCase()}?`)) {
-                    try {
-                        const docRef = doc(db, "situs", "pengaturan");
-                        let updateObj = {};
-                        updateObj[`brochure_${lvl}`] = "";
-                        await setDoc(docRef, updateObj, { merge: true });
-                        alert(`Brosur ${lvl.toUpperCase()} berhasil dihapus.`);
-                        await muatDataAdmin();
-                    } catch (err) {
-                        alert("Gagal menghapus brosur: " + err.message);
-                    }
-                }
-            });
-        }
-    });
-});
-
-// Proses Simpan Data Form Admin (Aman dari data kosong)
-document.getElementById("form-admin").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    
-    const saveBtn = document.querySelector(".btn-save");
-    const originalText = saveBtn ? saveBtn.innerText : "SIMPAN PERUBAHAN";
-    if (saveBtn) {
-        saveBtn.innerText = "SEDANG MENYIMPAN...";
-        saveBtn.disabled = true;
-    }
-
-    try {
-        const docRef = doc(db, "situs", "pengaturan");
-        const docSnap = await getDoc(docRef);
-        let existingData = docSnap.exists() ? docSnap.data() : {};
-
-        // Ambil data teks dengan aman (pertahankan nilai lama jika input kosong/tidak diubah)
-        let updatedData = {
-            ...existingData,
-            judul: document.getElementById("input-judul")?.value.trim() || existingData.judul || "",
-            tagline: document.getElementById("input-tagline")?.value.trim() || existingData.tagline || "",
-            pendaftaranLink: document.getElementById("input-pendaftaran")?.value.trim() || existingData.pendaftaranLink || "",
+        // Ambil semua nilai dari inputan form
+        const newData = {
+            judul: document.getElementById("judul").value,
+            tagline: document.getElementById("tagline").value,
+            logoUrl: document.getElementById("logoUrl").value,
+            pendaftaranLink: document.getElementById("pendaftaranLink").value,
+            
+            waName1: document.getElementById("waName1").value,
+            waNumber1: document.getElementById("waNumber1").value,
+            waName2: document.getElementById("waName2").value,
+            waNumber2: document.getElementById("waNumber2").value,
+            waName3: document.getElementById("waName3").value,
+            waNumber3: document.getElementById("waNumber3").value,
+            
+            brochure_tkq: document.getElementById("brochure_tkq").value,
+            brochure_ula: document.getElementById("brochure_ula").value,
+            brochure_wustho: document.getElementById("brochure_wustho").value,
+            brochure_ulya: document.getElementById("brochure_ulya").value,
         };
 
-        for (let i = 1; i <= 3; i++) {
-            updatedData[`waName${i}`] = document.getElementById(`wa-name-${i}`)?.value.trim() || existingData[`waName${i}`] || "";
-            updatedData[`waNumber${i}`] = document.getElementById(`wa-number-${i}`)?.value.trim() || existingData[`waNumber${i}`] || "";
+        try {
+            // Simpan ke Firestore (Aman karena menggunakan merge: true, tidak akan menghapus data lain)
+            await setDoc(pengaturanRef, newData, { merge: true });
+            tampilkanPesan("✅ Data berhasil diperbarui & disimpan!", "success");
+        } catch (error) {
+            console.error("Gagal menyimpan data:", error);
+            tampilkanPesan("❌ Gagal menyimpan data. Coba lagi.", "error");
+        } finally {
+            // Kembalikan tombol seperti semula
+            btnSimpan.innerText = originalText;
+            btnSimpan.disabled = false;
         }
+    });
+}
 
-        // 1. Proses Upload Logo Sekolah (Hanya jika admin memilih file baru)
-        const logoInput = document.getElementById("input-logo");
-        if (logoInput && logoInput.files && logoInput.files[0]) {
-            const file = logoInput.files[0];
-            const cleanFileName = file.name.replace(/[^a-zA-Z0-9_.-]/g, '_');
-            const filePath = `logo_${Date.now()}_${cleanFileName}`;
-            
-            const { error: uploadError } = await supabase.storage
-                .from('brosur')
-                .upload(filePath, file, {
-                    cacheControl: '3600',
-                    upsert: true
-                });
+// Fungsi bantu untuk memunculkan notifikasi berhasil/gagal
+function tampilkanPesan(pesan, tipe) {
+    statusMessage.innerText = pesan;
+    statusMessage.className = tipe;
+    statusMessage.style.display = "block";
+    setTimeout(() => {
+        statusMessage.style.display = "none";
+    }, 5000); // Notifikasi akan hilang sendiri setelah 5 detik
+}
 
-            if (uploadError) {
-                throw new Error("Gagal upload logo: " + uploadError.message);
-            }
-
-            const { data: publicUrlData } = supabase.storage
-                .from('brosur')
-                .getPublicUrl(filePath);
-
-            updatedData.logoUrl = publicUrlData.publicUrl;
-        }
-
-        // 2. Proses Upload Brosur per Tingkatan (Hanya jika admin memilih file baru)
-        for (const lvl of levels) {
-            const fileInput = document.getElementById(`input-brosur-${lvl}`);
-            if (fileInput && fileInput.files && fileInput.files[0]) {
-                const file = fileInput.files[0];
-                const cleanFileName = file.name.replace(/[^a-zA-Z0-9_.-]/g, '_');
-                const filePath = `brosur_${lvl}_${Date.now()}_${cleanFileName}`;
-                
-                const { error: uploadError } = await supabase.storage
-                    .from('brosur')
-                    .upload(filePath, file, {
-                        cacheControl: '3600',
-                        upsert: true
-                    });
-
-                if (uploadError) {
-                    throw new Error(`Gagal upload brosur ${lvl}: ` + uploadError.message);
-                }
-
-                const { data: publicUrlData } = supabase.storage
-                    .from('brosur')
-                    .getPublicUrl(filePath);
-
-                updatedData[`brochure_${lvl}`] = publicUrlData.publicUrl;
-            }
-        }
-
-        await setDoc(docRef, updatedData, { merge: true });
+// ==========================================
+// 3. FUNGSI MEMUNCULKAN GRAFIK STATISTIK
+// ==========================================
+async function muatStatistik() {
+    try {
+        const statSnap = await getDoc(statistikRef);
         
-        if (saveBtn) {
-            saveBtn.innerText = originalText;
-            saveBtn.disabled = false;
+        if (statSnap.exists()) {
+            const data = statSnap.data();
+            const ctxElement = document.getElementById('statistikChart');
+            
+            if (ctxElement) {
+                const ctx = ctxElement.getContext('2d');
+                
+                new Chart(ctx, {
+                    type: 'bar', // Jenis grafik batang
+                    data: {
+                        labels: ['Kunjungan Web', 'Download TKQ', 'Download Ula', 'Download Wustho', 'Download Ulya'],
+                        datasets: [{
+                            label: 'Jumlah (Orang)',
+                            data: [
+                                data.kunjungan || 0, 
+                                data.dl_tkq || 0, 
+                                data.dl_ula || 0, 
+                                data.dl_wustho || 0, 
+                                data.dl_ulya || 0
+                            ],
+                            backgroundColor: [
+                                'rgba(59, 130, 246, 0.85)', // Biru (Kunjungan)
+                                'rgba(16, 185, 129, 0.85)', // Hijau (TKQ)
+                                'rgba(245, 158, 11, 0.85)', // Oranye (Ula)
+                                'rgba(239, 68, 68, 0.85)',  // Merah (Wustho)
+                                'rgba(139, 92, 246, 0.85)'  // Ungu (Ulya)
+                            ],
+                            borderWidth: 0,
+                            borderRadius: 6, // Ujung grafik membulat modern
+                            barThickness: 45 // Ketebalan batang
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { 
+                            y: { 
+                                beginAtZero: true, 
+                                ticks: { precision: 0 } // Angka bulat, tidak ada desimal (misal 1.5 orang)
+                            } 
+                        },
+                        plugins: { 
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.parsed.y + ' Orang';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         }
-
-        await muatDataAdmin();
-        alert("Berhasil! Perubahan data, logo, dan brosur telah tersimpan.");
-
-    } catch (err) {
-        console.error("TERJADI ERROR DETAIL:", err);
-        alert("Terjadi kesalahan: " + err.message);
-        if (saveBtn) {
-            saveBtn.innerText = originalText;
-            saveBtn.disabled = false;
-        }
+    } catch (e) {
+        console.error("Gagal memuat grafik statistik", e);
     }
+}
+
+// ==========================================
+// 4. JALANKAN SEMUA FUNGSI SAAT HALAMAN DIBUKA
+// ==========================================
+window.addEventListener("DOMContentLoaded", () => {
+    muatData(); // Memanggil data form
+    setTimeout(muatStatistik, 800); // Memberi jeda sedikit sebelum menggambar grafik agar tidak berat
 });
