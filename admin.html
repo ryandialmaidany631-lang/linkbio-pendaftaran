@@ -4,98 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
     <title>Dashboard Admin - Pendaftaran</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #334155; padding: 30px 20px; }
-        .container { max-width: 800px; margin: auto; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { color: #0f172a; font-size: 28px; font-weight: 800; }
-        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); margin-bottom: 30px; border: 1px solid #f1f5f9; }
-        .card-title { margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; color: #0f172a; font-size: 18px; font-weight: 800; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         
-        label { display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 8px; margin-top: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
-        input[type="text"], input[type="url"] { width: 100%; padding: 14px 16px; border: 1px solid #cbd5e1; border-radius: 12px; outline: none; font-size: 13px; background-color: #f8fafc; transition: all 0.2s ease; }
-        input[type="text"]:focus, input[type="url"]:focus { border-color: #3b82f6; background-color: #ffffff; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
+        .header h1 { text-align: center; color: #0f172a; font-size: 24px; margin-bottom: 25px; }
+        .section-title { font-size: 16px; color: #0f172a; margin-top: 30px; margin-bottom: 15px; font-weight: 700; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        
+        label { display: block; font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 6px; margin-top: 15px; text-transform: uppercase; }
+        input[type="text"], input[type="url"] { width: 100%; padding: 12px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-family: inherit; }
+        input:focus { border-color: #3b82f6; outline: none; }
         
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-
-        button[type="submit"] { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); color: white; border: none; padding: 16px 20px; border-radius: 14px; font-weight: 700; cursor: pointer; width: 100%; font-size: 16px; margin-top: 35px; box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4); }
-        button[type="submit"]:hover { transform: translateY(-2px); box-shadow: 0 15px 25px -5px rgba(37, 99, 235, 0.5); }
         
-        #status-message { display: none; text-align: center; margin-top: 15px; padding: 12px; border-radius: 10px; font-weight: 600; font-size: 14px; }
+        button[type="submit"] { background-color: #2563eb; color: white; border: none; padding: 14px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; font-size: 15px; margin-top: 30px; }
+        button[type="submit"]:hover { background-color: #1d4ed8; }
+        
+        #status-message { display: none; text-align: center; margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; }
         .success { background-color: #dcfce7; color: #166534; }
         .error { background-color: #fee2e2; color: #991b1b; }
         
-        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; gap: 0; } }
+        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>⚙️ Dashboard Admin</h1>
-            <p style="color: #64748b; margin-top: 5px;">Kelola Informasi & Pantau Kunjungan Pendaftaran</p>
         </div>
 
-        <div class="card">
-            <h2 class="card-title">📊 Laporan Akses & Download Brosur</h2>
-            <div style="position: relative; height: 250px; width: 100%;">
-                <canvas id="statistikChart"></canvas>
-            </div>
+        <div class="section-title">📊 Laporan Kunjungan & Download (Per Tanggal)</div>
+        <div style="position: relative; height: 300px; width: 100%; margin-bottom: 20px;">
+            <canvas id="statistikChart"></canvas>
         </div>
 
-        <div class="card">
-            <h2 class="card-title">📝 Pengaturan Konten Web</h2>
+        <form id="admin-form">
+            <div class="section-title">📝 Pengaturan Konten Web</div>
             
-            <form id="admin-form">
-                <label>Judul Website (Ketik 'Ponpes' untuk pisah baris)</label>
-                <input type="text" id="judul">
-                
-                <label>Tagline / Sub-judul</label>
-                <input type="text" id="tagline">
-                
-                <label>Link Logo (Gunakan Link Supabase/Drive)</label>
-                <input type="url" id="logoUrl">
-                
-                <label>Link Website Pendaftaran Online</label>
-                <input type="url" id="pendaftaranLink">
+            <label>Judul Website (Ketik 'Ponpes' agar otomatis pisah baris)</label>
+            <input type="text" id="judul">
+            
+            <label>Tagline / Sub-judul</label>
+            <input type="text" id="tagline">
+            
+            <label>Link Logo (Gunakan Link Supabase/Drive)</label>
+            <input type="url" id="logoUrl">
+            
+            <label>Link Website Pendaftaran Online</label>
+            <input type="url" id="pendaftaranLink">
 
-                <h3 style="margin-top: 35px; color: #0f172a; font-size: 16px;">💬 Kontak Admin WhatsApp</h3>
-                <div class="grid-2">
-                    <div><label>Nama Admin 1</label><input type="text" id="waName1"></div>
-                    <div><label>Nomor WA 1 (08...)</label><input type="text" id="waNumber1"></div>
-                    <div><label>Nama Admin 2</label><input type="text" id="waName2"></div>
-                    <div><label>Nomor WA 2</label><input type="text" id="waNumber2"></div>
-                    <div><label>Nama Admin 3</label><input type="text" id="waName3"></div>
-                    <div><label>Nomor WA 3</label><input type="text" id="waNumber3"></div>
-                </div>
+            <div class="section-title">💬 Kontak Admin WhatsApp</div>
+            <div class="grid-2">
+                <div><label>Nama Admin 1</label><input type="text" id="waName1"></div>
+                <div><label>Nomor WA 1 (Mulai 08...)</label><input type="text" id="waNumber1"></div>
+                <div><label>Nama Admin 2</label><input type="text" id="waName2"></div>
+                <div><label>Nomor WA 2</label><input type="text" id="waNumber2"></div>
+                <div><label>Nama Admin 3</label><input type="text" id="waName3"></div>
+                <div><label>Nomor WA 3</label><input type="text" id="waNumber3"></div>
+            </div>
 
-                <h3 style="margin-top: 35px; color: #0f172a; font-size: 16px;">📄 Link Brosur Pendaftaran (Supabase/Drive)</h3>
-                <label>File Brosur TKQ</label>
-                <input type="url" id="brochure_tkq">
-                
-                <label>File Brosur ULA (SD)</label>
-                <input type="url" id="brochure_ula">
-                
-                <label>File Brosur WUSTHO (SMP)</label>
-                <input type="url" id="brochure_wustho">
-                
-                <label>File Brosur ULYA (SMA)</label>
-                <input type="url" id="brochure_ulya">
+            <div class="section-title">📄 Link Brosur Pendaftaran (Supabase/Drive)</div>
+            <label>File Brosur TKQ</label>
+            <input type="url" id="brochure_tkq">
+            
+            <label>File Brosur ULA (SD)</label>
+            <input type="url" id="brochure_ula">
+            
+            <label>File Brosur WUSTHO (SMP)</label>
+            <input type="url" id="brochure_wustho">
+            
+            <label>File Brosur ULYA (SMA)</label>
+            <input type="url" id="brochure_ulya">
 
-                <button type="submit" id="btn-simpan">💾 Simpan Perubahan</button>
-                <div id="status-message"></div>
-            </form>
-        </div>
+            <button type="submit" id="btn-simpan">💾 Simpan Perubahan</button>
+            <div id="status-message"></div>
+        </form>
     </div>
 
-    <!-- PENTING: Perhatikan versi script di bawah ini -->
-    <script type="module" src="admin.js?v=407"></script>
+    <script type="module" src="admin.js?v=500"></script>
 </body>
 </html>
