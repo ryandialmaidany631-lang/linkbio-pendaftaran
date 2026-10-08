@@ -46,11 +46,11 @@ async function muatData() {
             if(document.getElementById("waNumber3")) document.getElementById("waNumber3").value = data.waNumber3 || "";
             
             // Masukkan link secara tersembunyi dan ubah status jadi Hijau (Tersimpan)
-            if(data.logoUrl) { document.getElementById("logoUrl").value = data.logoUrl; document.getElementById("status_logo").innerText = "✅ Tersimpan"; document.getElementById("status_logo").style.color = "#16a34a"; }
-            if(data.brochure_tkq) { document.getElementById("brochure_tkq").value = data.brochure_tkq; document.getElementById("status_tkq").innerText = "✅ Tersimpan"; document.getElementById("status_tkq").style.color = "#16a34a"; }
-            if(data.brochure_ula) { document.getElementById("brochure_ula").value = data.brochure_ula; document.getElementById("status_ula").innerText = "✅ Tersimpan"; document.getElementById("status_ula").style.color = "#16a34a"; }
-            if(data.brochure_wustho) { document.getElementById("brochure_wustho").value = data.brochure_wustho; document.getElementById("status_wustho").innerText = "✅ Tersimpan"; document.getElementById("status_wustho").style.color = "#16a34a"; }
-            if(data.brochure_ulya) { document.getElementById("brochure_ulya").value = data.brochure_ulya; document.getElementById("status_ulya").innerText = "✅ Tersimpan"; document.getElementById("status_ulya").style.color = "#16a34a"; }
+            if(data.logoUrl) { document.getElementById("logoUrl").value = data.logoUrl; document.getElementById("status_logo").innerText = "✅ File Tersimpan"; document.getElementById("status_logo").style.color = "#16a34a"; }
+            if(data.brochure_tkq) { document.getElementById("brochure_tkq").value = data.brochure_tkq; document.getElementById("status_tkq").innerText = "✅ File Tersimpan"; document.getElementById("status_tkq").style.color = "#16a34a"; }
+            if(data.brochure_ula) { document.getElementById("brochure_ula").value = data.brochure_ula; document.getElementById("status_ula").innerText = "✅ File Tersimpan"; document.getElementById("status_ula").style.color = "#16a34a"; }
+            if(data.brochure_wustho) { document.getElementById("brochure_wustho").value = data.brochure_wustho; document.getElementById("status_wustho").innerText = "✅ File Tersimpan"; document.getElementById("status_wustho").style.color = "#16a34a"; }
+            if(data.brochure_ulya) { document.getElementById("brochure_ulya").value = data.brochure_ulya; document.getElementById("status_ulya").innerText = "✅ File Tersimpan"; document.getElementById("status_ulya").style.color = "#16a34a"; }
         }
     } catch (error) { console.error("Gagal memuat data:", error); }
 }
@@ -70,7 +70,7 @@ async function prosesUpload(fileId, urlId, folder) {
         await uploadBytes(storageRef, file);
         return await getDownloadURL(storageRef); 
     }
-    // Jika tidak upload file baru, data Supabase lama tetap dipertahankan
+    // Jika tidak upload file baru, data lama tetap dipertahankan
     return urlInput.value; 
 }
 
@@ -117,9 +117,9 @@ if (adminForm) {
             items.forEach(item => {
                 const hiddenInputId = item.id === 'logo' ? 'logoUrl' : `brochure_${item.id}`;
                 document.getElementById(hiddenInputId).value = item.val;
-                document.getElementById(`file_${item.id}`).value = ''; // Reset input file
+                document.getElementById(`file_${item.id}`).value = ''; 
                 if (item.val) {
-                    document.getElementById(`status_${item.id}`).innerText = "✅ Tersimpan";
+                    document.getElementById(`status_${item.id}`).innerText = "✅ File Tersimpan";
                     document.getElementById(`status_${item.id}`).style.color = "#16a34a";
                 }
             });
@@ -201,9 +201,9 @@ function gambarGrafik(pilihanTanggal) {
     if (chartStatistik) { chartStatistik.destroy(); }
     
     chartStatistik = new Chart(ctx, {
-        type: 'bar',
+        type: 'bar', // Grafik Batang Sesuai Permintaan
         data: {
-            labels: ['Kunjungan Web', 'Download TKQ', 'Download Ula', 'Download Wustho', 'Download Ulya'],
+            labels: ['Kunjungan', 'Download TKQ', 'Download Ula', 'Download Wustho', 'Download Ulya'],
             datasets: [{
                 label: `Statistik ${pilihanTanggal === 'total' ? 'Keseluruhan' : pilihanTanggal}`,
                 data: [statKunjungan, statTkq, statUla, statWustho, statUlya],
