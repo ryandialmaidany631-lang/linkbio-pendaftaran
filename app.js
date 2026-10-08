@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAX9MlyLRIz7zcFUtKtnqcc4vNSOzerYMQ",
@@ -12,6 +12,18 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+// [FITUR BARU] Mencatat Kunjungan Halaman Otomatis
+async function catatKunjungan() {
+    const statRef = doc(db, "situs", "statistik");
+    try {
+        await updateDoc(statRef, { kunjungan: increment(1) });
+    } catch (e) {
+        // Jika belum ada datanya, buat baru
+        await setDoc(statRef, { kunjungan: 1, dl_tkq: 0, dl_ula: 0, dl_wustho: 0, dl_ulya: 0 }, { merge: true });
+    }
+}
+catatKunjungan(); // Panggil saat web terbuka
 
 window.addEventListener("DOMContentLoaded", async () => {
     try {
@@ -73,7 +85,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                 }
             }
 
-            // 5. Brosur dengan Fitur Paksa Download (Tanpa Tab Baru)
+            // 5. Brosur dengan Fitur Paksa Download + Tracking Statistik
             const brochureWrapper = document.getElementById("brochure-section-wrapper");
             const brochureContainer = document.getElementById("brochure-container");
             if (brochureContainer && brochureWrapper) {
@@ -91,7 +103,8 @@ window.addEventListener("DOMContentLoaded", async () => {
                     const url = data[`brochure_${lvl.key}`];
                     if (url) {
                         hasBrochure = true;
-                        brochureHtml += `<a href="#" class="view-brochure-btn" data-url="${url}" data-name="${lvl.label.replace(/\s+/g, '_')}.jpg">📄 ${lvl.label}</a>`;
+                        // Tambahkan data-tingkat untuk mengenali mana yang didownload
+                        brochureHtml += `<a href="#" class="view-brochure-btn" data-url="${url}" data-tingkat="${lvl.key}" data-name="${lvl.label.replace(/\s+/g, '_')}.jpg">📄 ${lvl.label}</a>`;
                     }
                 });
                 
@@ -106,74 +119,31 @@ window.addEventListener("DOMContentLoaded", async () => {
                     const closeBtn = document.getElementById('close-modal');
 
                     if (modal && imgElement && downloadBtn && closeBtn) {
-                        // Saat Brosur Diklik (Membuka Popup Layar Hitam)
+                        // Buka Popup
                         btns.forEach(btn => {
                             btn.addEventListener('click', (e) => {
                                 e.preventDefault(); 
                                 const url = btn.getAttribute('data-url');
                                 const fileName = btn.getAttribute('data-name');
+                                const tingkat = btn.getAttribute('data-tingkat');
                                 
                                 imgElement.src = url; 
-                                downloadBtn.setAttribute('data-url', url); // Simpan url sementara di tombol
+                                downloadBtn.setAttribute('data-url', url); 
                                 downloadBtn.setAttribute('data-filename', fileName);
+                                downloadBtn.setAttribute('data-tingkat', tingkat); // Simpan tingkat
                                 modal.style.display = 'flex'; 
                             });
                         });
 
-                        // FUNGSI PAKSA DOWNLOAD (Mencegah buka tab baru)
+                        // Proses Download & Catat Statistik
                         downloadBtn.addEventListener('click', async (e) => {
                             e.preventDefault();
                             const url = downloadBtn.getAttribute('data-url');
                             const fileName = downloadBtn.getAttribute('data-filename');
+                            const tingkat = downloadBtn.getAttribute('data-tingkat');
                             if (!url) return;
 
-                            // Berikan efek loading agar wali murid tahu file sedang diproses
-                            const originalText = downloadBtn.innerText;
-                            downloadBtn.innerText = "⏳ Memproses...";
-                            downloadBtn.style.opacity = "0.7";
-
-                            try {
-                                const response = await fetch(url);
-                                const blob = await response.blob();
-                                const blobUrl = window.URL.createObjectURL(blob);
-                                
-                                // Buat link tersembunyi untuk memicu download
-                                const tempLink = document.createElement('a');
-                                tempLink.style.display = 'none';
-                                tempLink.href = blobUrl;
-                                tempLink.download = fileName; // Menggunakan nama sesuai tingkat (misal: Brosur_TKQ.jpg)
-                                
-                                document.body.appendChild(tempLink);
-                                tempLink.click();
-                                document.body.removeChild(tempLink);
-                                window.URL.revokeObjectURL(blobUrl);
-                            } catch (error) {
-                                console.error("Gagal mendownload brosur:", error);
-                                alert("Gagal mendownload brosur. Silakan coba lagi.");
-                            } finally {
-                                downloadBtn.innerText = originalText;
-                                downloadBtn.style.opacity = "1";
-                            }
-                        });
-
-                        // Tombol Tutup Silang
-                        closeBtn.addEventListener('click', () => {
-                            modal.style.display = 'none';
-                            imgElement.src = ''; 
-                        });
-
-                        // Tutup otomatis jika latar belakang hitam diklik
-                        modal.addEventListener('click', (e) => {
-                            if(e.target === modal) {
-                                modal.style.display = 'none';
-                                imgElement.src = '';
-                            }
-                        });
-                    }
-                }
-            }
-        }
-    } catch (err) {
-        console.error("Gagal memuat data:", err);
-    }
-});
+                            // [FITUR BARU] Mencatat jumlah download berdasarkan tingkat
+                            if (tingkat) {
+                                try {
+                                    await updateDoc(doc(db, "situs", "statistik
