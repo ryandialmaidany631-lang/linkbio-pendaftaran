@@ -22,10 +22,10 @@
         
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         
-        /* STYLE KHUSUS: Desain Kotak Upload Bersih (Tanpa Teks Link) */
-        .file-group { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; background: #ffffff; padding: 12px 16px; border-radius: 8px; border: 1px solid #cbd5e1; }
+        /* Desain Kotak Upload Bersih (Link Panjang Disembunyikan) */
+        .file-group { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; background: #f8fafc; padding: 12px 16px; border-radius: 8px; border: 1px solid #cbd5e1; }
         .status-indicator { flex: 1; font-size: 13px; font-weight: 700; color: #ef4444; }
-        .btn-action { padding: 8px 14px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 12px; transition: 0.2s; display: flex; align-items: center; gap: 5px; }
+        .btn-action { padding: 8px 14px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 12px; transition: 0.2s; }
         .btn-upload { background-color: #3b82f6; color: white; }
         .btn-upload:hover { background-color: #2563eb; }
         .btn-hapus { background-color: #fee2e2; color: #ef4444; }
@@ -38,6 +38,7 @@
         .success { background-color: #dcfce7; color: #166534; }
         .error { background-color: #fee2e2; color: #991b1b; }
         
+        /* Desain Dropdown Grafik */
         .filter-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         select { padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; font-family: inherit; font-size: 13px; font-weight: 600; color: #0f172a; outline: none; cursor: pointer; }
         
@@ -47,14 +48,15 @@
 <body>
     <div class="container">
         
-        <div class="section-title">📊 Laporan Akses & Download Brosur</div>
+        <!-- BAGIAN GRAFIK DAN DROPDOWN -->
+        <div class="section-title">📊 Laporan Kunjungan & Download Brosur</div>
         <div class="filter-container">
             <span style="font-size: 13px; color: #64748b;">Pilih Tanggal:</span>
             <select id="filterTanggal">
-                <option value="total">Keseluruhan (Total)</option>
+                <option value="total">Data Keseluruhan (Total)</option>
             </select>
         </div>
-        <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;">
+        <div style="position: relative; height: 260px; width: 100%; margin-bottom: 20px;">
             <canvas id="statistikChart"></canvas>
         </div>
 
@@ -62,10 +64,10 @@
             <div class="section-title">📝 Pengaturan Konten Web</div>
             
             <label>Judul Website</label>
-            <input type="text" id="judul" placeholder="Contoh: TKQ Luqmanul Hakim Ponpes Luqmanul Hakim Medan">
+            <input type="text" id="judul">
             
             <label>Tagline / Sub-judul</label>
-            <input type="text" id="tagline" placeholder="Contoh: Link Pendaftaran & Info Pendaftaran">
+            <input type="text" id="tagline">
             
             <label>Link Website Pendaftaran Online</label>
             <input type="url" id="pendaftaranLink">
@@ -75,9 +77,9 @@
             <div class="file-group">
                 <input type="hidden" id="logoUrl">
                 <input type="file" id="file_logo" style="display:none" accept="image/*" onchange="document.getElementById('status_logo').innerText='⏳ File Siap Disimpan'; document.getElementById('status_logo').style.color='#d97706';">
-                <div id="status_logo" class="status-indicator">❌ Kosong</div>
-                <button type="button" class="btn-action btn-upload" onclick="document.getElementById('file_logo').click()">📁 Pilih File</button>
-                <button type="button" class="btn-action btn-hapus" onclick="document.getElementById('logoUrl').value=''; document.getElementById('file_logo').value=''; document.getElementById('status_logo').innerText='❌ Kosong'; document.getElementById('status_logo').style.color='#ef4444';">🗑️ Hapus</button>
+                <div id="status_logo" class="status-indicator">❌ Belum Ada File</div>
+                <button type="button" class="btn-action btn-upload" onclick="document.getElementById('file_logo').click()">📁 Upload Ganti</button>
+                <button type="button" class="btn-action btn-hapus" onclick="document.getElementById('logoUrl').value=''; document.getElementById('file_logo').value=''; document.getElementById('status_logo').innerText='❌ Belum Ada File'; document.getElementById('status_logo').style.color='#ef4444';">🗑️ Hapus</button>
             </div>
 
             <div class="section-title">💬 Kontak Admin WhatsApp</div>
@@ -97,9 +99,9 @@
             <div class="file-group">
                 <input type="hidden" id="brochure_tkq">
                 <input type="file" id="file_tkq" style="display:none" accept="image/*,.pdf" onchange="document.getElementById('status_tkq').innerText='⏳ File Siap Disimpan'; document.getElementById('status_tkq').style.color='#d97706';">
-                <div id="status_tkq" class="status-indicator">❌ Kosong</div>
-                <button type="button" class="btn-action btn-upload" onclick="document.getElementById('file_tkq').click()">📁 Pilih File</button>
-                <button type="button" class="btn-action btn-hapus" onclick="document.getElementById('brochure_tkq').value=''; document.getElementById('file_tkq').value=''; document.getElementById('status_tkq').innerText='❌ Kosong'; document.getElementById('status_tkq').style.color='#ef4444';">🗑️ Hapus</button>
+                <div id="status_tkq" class="status-indicator">❌ Belum Ada File</div>
+                <button type="button" class="btn-action btn-upload" onclick="document.getElementById('file_tkq').click()">📁 Upload Ganti</button>
+                <button type="button" class="btn-action btn-hapus" onclick="document.getElementById('brochure_tkq').value=''; document.getElementById('file_tkq').value=''; document.getElementById('status_tkq').innerText='❌ Belum Ada File'; document.getElementById('status_tkq').style.color='#ef4444';">🗑️ Hapus</button>
             </div>
             
             <!-- BROSUR ULA -->
@@ -107,9 +109,9 @@
             <div class="file-group">
                 <input type="hidden" id="brochure_ula">
                 <input type="file" id="file_ula" style="display:none" accept="image/*,.pdf" onchange="document.getElementById('status_ula').innerText='⏳ File Siap Disimpan'; document.getElementById('status_ula').style.color='#d97706';">
-                <div id="status_ula" class="status-indicator">❌ Kosong</div>
-                <button type="button" class="btn-action btn-upload" onclick="document.getElementById('file_ula').click()">📁 Pilih File</button>
-                <button type="button" class="btn-action btn-hapus" onclick="document.getElementById('brochure_ula').value=''; document.getElementById('file_ula').value=''; document.getElementById('status_ula').innerText='❌ Kosong'; document.getElementById('status_ula').style.color='#ef4444';">🗑️ Hapus</button>
+                <div id="status_ula" class="status-indicator">❌ Belum Ada File</div>
+                <button type="button" class="btn-action btn-upload" onclick="document.getElementById('file_ula').click()">📁 Upload Ganti</button>
+                <button type="button" class="btn-action btn-hapus" onclick="document.getElementById('brochure_ula').value=''; document.getElementById('file_ula').value=''; document.getElementById('status_ula').innerText='❌ Belum Ada File'; document.getElementById('status_ula').style.color='#ef4444';">🗑️ Hapus</button>
             </div>
             
             <!-- BROSUR WUSTHO -->
@@ -117,9 +119,9 @@
             <div class="file-group">
                 <input type="hidden" id="brochure_wustho">
                 <input type="file" id="file_wustho" style="display:none" accept="image/*,.pdf" onchange="document.getElementById('status_wustho').innerText='⏳ File Siap Disimpan'; document.getElementById('status_wustho').style.color='#d97706';">
-                <div id="status_wustho" class="status-indicator">❌ Kosong</div>
-                <button type="button" class="btn-action btn-upload" onclick="document.getElementById('file_wustho').click()">📁 Pilih File</button>
-                <button type="button" class="btn-action btn-hapus" onclick="document.getElementById('brochure_wustho').value=''; document.getElementById('file_wustho').value=''; document.getElementById('status_wustho').innerText='❌ Kosong'; document.getElementById('status_wustho').style.color='#ef4444';">🗑️ Hapus</button>
+                <div id="status_wustho" class="status-indicator">❌ Belum Ada File</div>
+                <button type="button" class="btn-action btn-upload" onclick="document.getElementById('file_wustho').click()">📁 Upload Ganti</button>
+                <button type="button" class="btn-action btn-hapus" onclick="document.getElementById('brochure_wustho').value=''; document.getElementById('file_wustho').value=''; document.getElementById('status_wustho').innerText='❌ Belum Ada File'; document.getElementById('status_wustho').style.color='#ef4444';">🗑️ Hapus</button>
             </div>
             
             <!-- BROSUR ULYA -->
@@ -127,9 +129,9 @@
             <div class="file-group">
                 <input type="hidden" id="brochure_ulya">
                 <input type="file" id="file_ulya" style="display:none" accept="image/*,.pdf" onchange="document.getElementById('status_ulya').innerText='⏳ File Siap Disimpan'; document.getElementById('status_ulya').style.color='#d97706';">
-                <div id="status_ulya" class="status-indicator">❌ Kosong</div>
-                <button type="button" class="btn-action btn-upload" onclick="document.getElementById('file_ulya').click()">📁 Pilih File</button>
-                <button type="button" class="btn-action btn-hapus" onclick="document.getElementById('brochure_ulya').value=''; document.getElementById('file_ulya').value=''; document.getElementById('status_ulya').innerText='❌ Kosong'; document.getElementById('status_ulya').style.color='#ef4444';">🗑️ Hapus</button>
+                <div id="status_ulya" class="status-indicator">❌ Belum Ada File</div>
+                <button type="button" class="btn-action btn-upload" onclick="document.getElementById('file_ulya').click()">📁 Upload Ganti</button>
+                <button type="button" class="btn-action btn-hapus" onclick="document.getElementById('brochure_ulya').value=''; document.getElementById('file_ulya').value=''; document.getElementById('status_ulya').innerText='❌ Belum Ada File'; document.getElementById('status_ulya').style.color='#ef4444';">🗑️ Hapus</button>
             </div>
 
             <button type="submit" id="btn-simpan">💾 Simpan Perubahan</button>
@@ -137,7 +139,7 @@
         </form>
     </div>
 
-    <!-- UPDATE VERSI SCRIPT -->
-    <script type="module" src="admin.js?v=801"></script>
+    <!-- UPDATE VERSI SCRIPT 909 -->
+    <script type="module" src="admin.js?v=909"></script>
 </body>
 </html>
