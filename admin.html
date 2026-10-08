@@ -3,223 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Pengaturan Sekolah</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Dashboard Admin - Pendaftaran</title>
+    
+    <!-- Font Modern Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Library Chart.js untuk Menampilkan Grafik Statistik -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f1f5f9;
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
             color: #334155;
+            padding: 30px 20px;
         }
         .container {
-            max-width: 600px;
-            background: #ffffff;
-            margin: 0 auto;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: auto;
         }
-        h2 {
-            margin-top: 0;
-            color: #1e293b;
+        .header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
-        .mb-3 {
+        .header h1 {
+            color: #0f172a;
+            font-size: 28px;
+            font-weight: 800;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            margin-bottom: 30px;
+            border: 1px solid #f1f5f9;
+        }
+        .card-title {
             margin-bottom: 20px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 15px;
+            color: #0f172a;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
+        
+        /* Form Styling */
         label {
             display: block;
-            font-weight: bold;
-            margin-bottom: 6px;
-            font-size: 14px;
-        }
-        input[type="text"], input[type="url"], input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-        input[type="file"] {
-            background: #f8fafc;
-        }
-        .brochure-section {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 25px;
-        }
-        .brochure-section h3 {
-            font-size: 16px;
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: #1e293b;
-        }
-        .btn-save {
-            background: #0f172a;
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 12px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 15px;
-            margin-top: 15px;
-            transition: background 0.2s;
-        }
-        .btn-save:hover {
-            background: #1e293b;
-        }
-        .back-link {
-            display: block;
-            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 8px;
             margin-top: 20px;
-            color: #64748b;
-            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        input[type="text"], input[type="url"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            outline: none;
             font-size: 14px;
+            font-family: inherit;
+            background-color: #f8fafc;
+            transition: all 0.2s ease;
         }
-        .back-link:hover {
-            text-decoration: underline;
+        input[type="text"]:focus, input[type="url"]:focus {
+            border-color: #3b82f6;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
         }
-        .status-badge {
-            font-size: 12px;
-            color: #059669;
-            font-weight: 600;
-            margin-bottom: 4px;
-            display: none;
+        
+        /* Grid untuk Input Bersebelahan */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
-        .btn-delete-file {
-            background: #ef4444;
+
+        /* Tombol Simpan */
+        button[type="submit"] {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
             color: white;
             border: none;
-            padding: 2px 8px;
-            border-radius: 4px;
+            padding: 16px 20px;
+            border-radius: 14px;
+            font-weight: 700;
             cursor: pointer;
-            margin-left: 8px;
-            font-size: 11px;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 35px;
+            transition: all 0.2s ease;
+            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
+        }
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -5px rgba(37, 99, 235, 0.5);
+        }
+        button[type="submit"]:active {
+            transform: scale(0.98);
+        }
+        
+        /* Pesan Status */
+        #status-message {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .success { background-color: #dcfce7; color: #166534; }
+        .error { background-color: #fee2e2; color: #991b1b; }
+        
+        @media (max-width: 600px) {
+            .grid-2 { grid-template-columns: 1fr; gap: 0; }
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>⚙️ Dashboard Admin</h1>
+            <p style="color: #64748b; margin-top: 5px;">Kelola Informasi & Pantau Kunjungan Pendaftaran</p>
+        </div>
 
-<div class="container">
-    <h2>Dashboard Pengaturan Admin</h2>
-
-    <form id="form-admin">
-        
-        <!-- Upload Logo Sekolah -->
-        <div class="mb-3" style="padding: 15px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
-            <label>Logo Sekolah</label>
-            <div id="status-logo" class="status-badge">
-                ✓ Logo sudah diupload. 
-                <button type="button" id="btn-hapus-logo" class="btn-delete-file">Hapus / Ganti</button>
+        <!-- 1. KOTAK GRAFIK STATISTIK (Fitur Baru) -->
+        <div class="card">
+            <h2 class="card-title">📊 Laporan Akses & Download Brosur</h2>
+            <!-- Kanvas tempat grafik akan digambar oleh admin.js -->
+            <div style="position: relative; height: 250px; width: 100%;">
+                <canvas id="statistikChart"></canvas>
             </div>
-            <input type="file" id="input-logo" accept="image/*">
         </div>
 
-        <!-- Pengaturan Teks Utama -->
-        <div class="mb-3">
-            <label for="input-judul">Judul Utama / Nama Lembaga</label>
-            <input type="text" id="input-judul" placeholder="Contoh: Yayasan Pendidikan Islam...">
-        </div>
+        <!-- 2. KOTAK PENGATURAN DATA -->
+        <div class="card">
+            <h2 class="card-title">📝 Pengaturan Konten Web</h2>
+            
+            <form id="admin-form">
+                
+                <label>Judul Website (Ketik 'Ponpes' agar otomatis pisah baris)</label>
+                <input type="text" id="judul" placeholder="Contoh: TKQ Luqmanul Hakim Ponpes Luqmanul Hakim Medan">
+                
+                <label>Tagline / Sub-judul</label>
+                <input type="text" id="tagline" placeholder="Contoh: Link Pendaftaran & Info Pendaftaran">
+                
+                <label>Link Logo (Gunakan Link Supabase/Drive)</label>
+                <input type="url" id="logoUrl" placeholder="https://...">
+                
+                <label>Link Website Pendaftaran Online</label>
+                <input type="url" id="pendaftaranLink" placeholder="https://...">
 
-        <div class="mb-3">
-            <label for="input-tagline">Tagline / Deskripsi Singkat</label>
-            <input type="text" id="input-tagline" placeholder="Contoh: Unggul, Berkarakter, dan Islami">
-        </div>
-
-        <div class="mb-3">
-            <label for="input-pendaftaran">Link Pendaftaran Online (URL)</label>
-            <input type="url" id="input-pendaftaran" placeholder="https://forms.gle/...">
-        </div>
-
-        <!-- Kontak WhatsApp 1 -->
-        <div class="mb-3">
-            <label>Nama Kontak 1</label>
-            <input type="text" id="wa-name-1" placeholder="Contoh: Admin TKQ">
-        </div>
-        <div class="mb-3">
-            <label>Nomor WhatsApp 1</label>
-            <input type="text" id="wa-number-1" placeholder="628xxxxxxxxxx">
-        </div>
-
-        <!-- Kontak WhatsApp 2 -->
-        <div class="mb-3">
-            <label>Nama Kontak 2</label>
-            <input type="text" id="wa-name-2" placeholder="Contoh: Admin ULA">
-        </div>
-        <div class="mb-3">
-            <label>Nomor WhatsApp 2</label>
-            <input type="text" id="wa-number-2" placeholder="628xxxxxxxxxx">
-        </div>
-
-        <!-- Kontak WhatsApp 3 -->
-        <div class="mb-3">
-            <label>Nama Kontak 3</label>
-            <input type="text" id="wa-name-3" placeholder="Contoh: Admin WUSTHO">
-        </div>
-        <div class="mb-3">
-            <label>Nomor WhatsApp 3</label>
-            <input type="text" id="wa-number-3" placeholder="628xxxxxxxxxx">
-        </div>
-
-        <!-- Upload Brosur per Tingkatan (PDF/Gambar) -->
-        <div class="brochure-section">
-            <h3>Upload Brosur per Tingkatan (PDF/Gambar)</h3>
-
-            <!-- Brosur TKQ -->
-            <div class="mb-3">
-                <label>Brosur TKQ</label>
-                <div id="status-brosur-tkq" class="status-badge">
-                    ✓ Brosur sudah diupload. 
-                    <button type="button" id="btn-hapus-tkq" class="btn-delete-file">Hapus / Ganti</button>
+                <h3 style="margin-top: 35px; color: #0f172a; font-size: 16px;">💬 Kontak Admin WhatsApp</h3>
+                <div class="grid-2">
+                    <div>
+                        <label>Nama Admin 1</label>
+                        <input type="text" id="waName1" placeholder="Contoh: Ustadz Jimmy">
+                    </div>
+                    <div>
+                        <label>Nomor WA 1 (Mulai 08...)</label>
+                        <input type="text" id="waNumber1" placeholder="08527815...">
+                    </div>
+                    <div>
+                        <label>Nama Admin 2</label>
+                        <input type="text" id="waName2" placeholder="Contoh: Rifqi">
+                    </div>
+                    <div>
+                        <label>Nomor WA 2</label>
+                        <input type="text" id="waNumber2" placeholder="08...">
+                    </div>
+                    <div>
+                        <label>Nama Admin 3</label>
+                        <input type="text" id="waName3" placeholder="Contoh: Ustadz Puji">
+                    </div>
+                    <div>
+                        <label>Nomor WA 3</label>
+                        <input type="text" id="waNumber3" placeholder="08...">
+                    </div>
                 </div>
-                <input type="file" id="input-brosur-tkq" accept=".pdf, image/*">
-            </div>
 
-            <!-- Brosur ULA -->
-            <div class="mb-3">
-                <label>Brosur ULA (SD)</label>
-                <div id="status-brosur-ula" class="status-badge">
-                    ✓ Brosur sudah diupload. 
-                    <button type="button" id="btn-hapus-ula" class="btn-delete-file">Hapus / Ganti</button>
-                </div>
-                <input type="file" id="input-brosur-ula" accept=".pdf, image/*">
-            </div>
+                <h3 style="margin-top: 35px; color: #0f172a; font-size: 16px;">📄 Link Brosur Pendaftaran (Supabase/Drive)</h3>
+                <label>File Brosur TKQ</label>
+                <input type="url" id="brochure_tkq" placeholder="https://...">
+                
+                <label>File Brosur ULA (SD)</label>
+                <input type="url" id="brochure_ula" placeholder="https://...">
+                
+                <label>File Brosur WUSTHO (SMP)</label>
+                <input type="url" id="brochure_wustho" placeholder="https://...">
+                
+                <label>File Brosur ULYA (SMA)</label>
+                <input type="url" id="brochure_ulya" placeholder="https://...">
 
-            <!-- Brosur WUSTHO -->
-            <div class="mb-3">
-                <label>Brosur WUSTHO (SMP)</label>
-                <div id="status-brosur-wustho" class="status-badge">
-                    ✓ Brosur sudah diupload. 
-                    <button type="button" id="btn-hapus-wustho" class="btn-delete-file">Hapus / Ganti</button>
-                </div>
-                <input type="file" id="input-brosur-wustho" accept=".pdf, image/*">
-            </div>
-
-            <!-- Brosur ULYA -->
-            <div class="mb-3">
-                <label>Brosur ULYA (SMA)</label>
-                <div id="status-brosur-ulya" class="status-badge">
-                    ✓ Brosur sudah diupload. 
-                    <button type="button" id="btn-hapus-ulya" class="btn-delete-file">Hapus / Ganti</button>
-                </div>
-                <input type="file" id="input-brosur-ulya" accept=".pdf, image/*">
-            </div>
+                <!-- Tombol Submit -->
+                <button type="submit" id="btn-simpan">💾 Simpan Perubahan</button>
+                <div id="status-message"></div>
+            </form>
         </div>
+    </div>
 
-        <button type="submit" class="btn-save">SIMPAN PERUBAHAN</button>
-    </form>
-
-    <a href="index.html" class="back-link">← Kembali ke halaman publik</a>
-</div>
-
-<script type="module" src="admin.js"></script>
-
+    <!-- Menghubungkan ke file logika admin.js -->
+    <!-- (Pastikan kode javascript di langkah sebelumnya disalin ke file admin.js) -->
+    <script type="module" src="admin.js?v=401"></script>
 </body>
 </html>
